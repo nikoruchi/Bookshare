@@ -1,0 +1,53 @@
+.list_section{
+	/*background-color: red;*/
+	margin: 20px 22px;
+	font-family: 'Raleway Light';
+	font-size: 23px;
+}
+.list_content{
+	font-family: 'Raleway Light';
+	background-color: rgba(104,66,55,0.1);
+	border-radius: 4px;
+	border: 1px solid rgba(104,66,55,0.2);
+	height: 110px;
+	margin-bottom: 10px;
+}
+#aside2{
+	background-color: blue;
+	margin: -105px 90px;
+}
+.foot{
+	float: right;
+}
+#proceed{
+	padding-top: 10px;
+}
+/*----------CUSTOMS--------*/ 
+#content{
+	font-size: 20px;
+	margin: -105px 90px;
+}
+#thumbnail{
+	width: 65px;
+	height: 90px;
+	padding: 10px;
+}
+#price{
+	font-family: 'Raleway Medium';
+}
+#accname{
+	font-size: 18px;
+	color: gray;
+}
+.foot content{
+	font-family: 'Raleway Medium';
+}
+#proceed a{
+	text-decoration: none;
+	color: gray;
+	font-size: 20px;
+	margin-left: 850px;
+}
+#proceed a:hover{
+	text-decoration: underline;
+}

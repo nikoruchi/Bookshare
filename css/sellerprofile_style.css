@@ -1,0 +1,81 @@
+/*CONTAINERS*/
+.profile_header{
+	align-content: center;
+}
+#profile_side{
+	margin-top: 20px;
+	font-family: 'Raleway Light';
+	text-align: center;
+}
+#prof_name{
+	width: auto;
+	padding:2px;
+}
+#contact_section{
+	margin-top: 20px;
+	padding-top: 6px;
+	font-size: 20px;
+}
+#bookshelf_section{
+	margin-top: -582px;
+    margin-left: 700px;
+    float: right;
+    height: 60px;
+}
+#aside{
+	font-family: 'Raleway Light';
+	text-align: center;
+}
+#yrlvl_course{
+	font-family: 'Raleway Light';
+	font-size: 18px;
+	margin-top: -22px;
+}
+
+/*CUSTOMS*/
+#user_pic{
+	width: 220px;
+	height: 220px;
+}
+#multi_inputs{
+	display: block;
+	padding-left: 10px;
+}
+#accountname{
+	font-size: 30px;
+	font-family: 'Raleway Medium';
+	font-weight: 700;
+	padding: 2px;
+}
+#username{
+	margin-top: -7px;
+	color: rgba(0,0,0,0.6);
+	padding-left: 4px;
+	font-size: 20px;
+}
+#contact_section label{
+	font-weight: 700;
+}
+#image_bookshelf img, #label_bookshelf img{
+	width: 60px;
+	height: 60px;	
+}
+#label_bookshelf{
+	margin-top: -54px;
+	padding-right: 20px;
+	padding-left: 50px;	
+}
+#label_bookshelf img{
+	width: auto;
+	height: 40px;
+	background-color: rgba(0,0,0,0.5);
+}
+#image_bookshelf img{
+	position: relative;
+}
+#label_bookshelf img:hover{
+	box-shadow: 2px 2px 2px gray;
+}
+#course{
+	font-family: 'Raleway Medium';
+}
