@@ -136,7 +136,7 @@
 							<a class="bookshelf_book_container" href="<?php if($account_id==$buyer_id){echo "Book_info.php?id=".$book_id;}else{ echo "Public_book_info.php?id=".$book_id;}?>" >
 								<content class="bookshelf_book">
 									<img height="225" width="150" class="" alt="<?=$book_name;?>" title="<?=$book_name?>" src="<?php echo $book_imagepath; ?>">
-									<label>Php<?=$book_price;?><br><?=$book_name?></label>
+									<label>Php<?=$book_price;?></label>
 								</content>
 							</a>
 	<?php 				}
@@ -156,12 +156,12 @@
 					<a class="bookshelf_book_container" href="<?php if($account_id==$buyer_id){echo "Book_info.php?id=".$book_id;}else{ echo "Public_book_info.php?id=".$book_id;}?>">
 						<content class="bookshelf_book">
 							<img height="225" width="150" class="" alt="<?=$book_name;?>" title="<?=$book_name?>" src="<?php echo $book_imagepath; ?>">
-							<label>Php<?=$row["book_price"];?><br><?=$row["book_name"];?></label>
+							<label>Php<?=$book_price;?></label>
 						</content>
 					</a>
 	<?php 		} 
 			} else { ?>
-				<p>Record table is empty</p>
+				<p>No more books available</p>
 	<?php 	}
 		}
 		mysqli_close($dbconn);

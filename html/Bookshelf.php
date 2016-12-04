@@ -90,7 +90,7 @@
    <div class="add_button_container">
     <div id="btn_container">
       <a href="Add_Book.php"><input type="button" name="add_a_book" value="+Add a Book" class="btn btn-primary"></a>
-      <a href="View_Bookmarks.php"><input id="bookmarks" type="button" name="add_a_book" value="Bookmarks" class="btn btn-success"></a>
+      <!-- <a href="View_Bookmarks.php"><input id="bookmarks" type="button" name="add_a_book" value="Bookmarks" class="btn btn-success"></a> -->
     </div>
    </div>
 
@@ -103,7 +103,7 @@
             <a class="bookshelf_book_container" href="Book_info.php?id=<?php echo $row["book_id"];?>" >
         <content class="bookshelf_book">
             <img  height="225" width="150" class="" alt="<?=$row["book_name"];?>" title="<?=$row["book_name"];?>" src="<?php echo $row['book_imagepath']; ?>">
-            <label>Php<?=$row["book_price"];?><br><?=$row["book_name"];?></label>
+            <label>Php<?=$row["book_price"];?></label>
         </content>
       </a>
  <?php  } 
