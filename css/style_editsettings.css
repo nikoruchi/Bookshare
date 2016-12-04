@@ -15,7 +15,7 @@
   display: block;
 }
 #edit_data2{
-  margin-top: 250px;
+  margin-top: 269px;
   width: 500px;
   margin-left: 100px;
   padding-bottom: 20px;
@@ -44,7 +44,7 @@
 }
 #edit-btn-container{
   padding-top: 26px;
-  padding-left: 25px;
+  padding-left: 280px;
 }
 
 /*CUSTOM EDITS*/
@@ -79,6 +79,10 @@
 #action{
   padding: 2px;
 }
+.re-password{
+  padding-top: 13px;
+}
+
 /*BOOTSTRAP*/
 /*BOOK INFO TEXTFIELDS*/
 .form-control-set {
