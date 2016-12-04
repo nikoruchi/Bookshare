@@ -161,6 +161,7 @@
         </div>
         <div id="edit_dropdown" class="edit_dropdown_content">
             <a  data-toggle="modal" data-target="#myModal5">Change Photo</a>
+            <a  data-toggle="modal" data-target="#myModal5A">Change Password</a>
             <a href="edit.php">Edit Account</a>
         </div>
      </div>
@@ -241,6 +242,35 @@
             <span>Upload</span> 
             <input type="file" name="pic-upload" id="pic-upload" class="upload" />
           </label>
+        </div>
+        <div class="modal-footer">
+        <input type="submit" value="UPDATE" name="save_pic" class="btn btn-default">
+        <input type="submit" value="CANCEL" class="btn btn-danger">
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div class="modal fade" id="myModal5A" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+      <form method="post" action="<?php $_PHP_SELF; ?>" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h4 class="modal-title">Change Your Password</h4>
+        </div>
+        <div class="modal-body">
+          <content class="col-xs-set password">
+              <label id="password">Old Password:</label>
+              <input class="form-control-set" type="password" name="password" value="<?php echo $password; ?>"> 
+              <label id="password">New Password:</label>
+              <input class="form-control-set" type="password" name="new-password" value="<?php echo $password; ?>"> 
+              <label id="re-password">Re-type Password:</label>
+              <input class="form-control-set" type="password" name="re-password"> 
+          </content>
         </div>
         <div class="modal-footer">
         <input type="submit" value="UPDATE" name="save_pic" class="btn btn-default">

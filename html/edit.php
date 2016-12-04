@@ -161,14 +161,10 @@
                     <label id="name">Name:</label>
                     <input class="form-control-set" type="text" name="name" value="<?php echo $account_name; ?>">
                     <label id="user">Username:</label>
-                    <input class="form-control-set" type="text" name="user_name" value="<?php echo $user_name; ?>">
-                    <label id="password">Password:</label>
-                    <input class="form-control-set" type="password" name="password" value="<?php echo $password; ?>"> 
-                    
+                    <input class="form-control-set" type="text" name="user_name" value="<?php echo $user_name; ?>">                    
                 </content>
                 <content class="col-xs-set">
                     <label id="year">Year:</label>
-                    <!-- <input class="form-control-set" type="text" name="year_level" value="<?php echo  $year_level; ?>"> -->
                     <select name="yearlevel" id="yearlevel" class="form-control-set">     
                       <option value=""> </option>
                       <option value="1st_year"> 1st Year </option>
@@ -184,7 +180,6 @@
                 </content>
                 <content class="col-xs-set">
                     <label id="year">Course:</label>
-                   <!--  <input class="form-control-set" type="text" name="course" value="<?php echo  $course; ?>"> -->
                     <select name="course1" id="course1" class="form-control-set">      
                       <option value="">  </option>
                       <option value="Accountancy"> Accountancy </option>
@@ -208,10 +203,6 @@
                       <option value="Sociology"> Sociology </option>
                       <option value="Statistics"> Statistics </option>
                     </select>
-                </content>
-                <content class="col-xs-set re-password">
-                  <label id="re-password">Re-type Password:</label>
-                  <input class="form-control-set" type="password" name="re-password"> 
                 </content>
                 <content class="col-xs-set" id="edit-btn-container">
                         <input type="submit" name="Save" value="Save" class="btn btn-default">
