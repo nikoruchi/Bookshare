@@ -164,6 +164,7 @@
                     <input class="form-control-set" type="text" name="user_name" value="<?php echo $user_name; ?>">
                     <label id="password">Password:</label>
                     <input class="form-control-set" type="password" name="password" value="<?php echo $password; ?>"> 
+                    
                 </content>
                 <content class="col-xs-set">
                     <label id="year">Year:</label>
@@ -208,9 +209,12 @@
                       <option value="Statistics"> Statistics </option>
                     </select>
                 </content>
+                <content class="col-xs-set re-password">
+                  <label id="re-password">Re-type Password:</label>
+                  <input class="form-control-set" type="password" name="re-password"> 
+                </content>
                 <content class="col-xs-set" id="edit-btn-container">
                         <input type="submit" name="Save" value="Save" class="btn btn-default">
-                        <!-- <input type="reset" name="Cancel" value="Cancel" class="btn btn-danger" > -->
                         <a href="Settings.php" class="btn btn-danger"> Cancel </a> 
                 </content>
             </form>
