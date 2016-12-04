@@ -153,7 +153,8 @@
             $transaction_buyer; $transaction_seller; $transaction_date; $prev_buyer_id=""; $prev_seller_id=""; $prev_date="";
     
               
-              $activity = "SELECT * from transactions where  seller_id = '$account_id' or buyer_id = '$account_id' order by date desc, seller";
+              $activity = "SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`)))) 
+              as transactions where  seller_id = '$account_id' or buyer_id = '$account_id' order by date desc, seller";
               $activity_result = mysqli_query($dbconn, $activity);
 
 
@@ -168,8 +169,11 @@
 
               if($transaction_buyer_id != $prev_buyer_id || $transaction_seller_id != $prev_seller_id && $transaction_date != $prev_date){
 
-              $user_buyer = "SELECT * from transactions where buyer_id  = '$transaction_buyer_id' and date='$transaction_date'";
-              $user_seller = "SELECT * from transactions where seller_id = '$transaction_seller_id' and date='$transaction_date'";
+              $user_buyer = "SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) 
+              as transactions where buyer_id  = '$transaction_buyer_id' and date='$transaction_date'";
+             
+              $user_seller = "SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) 
+              as transactions where seller_id = '$transaction_seller_id' and date='$transaction_date'";
 
               $user_buyer_result = mysqli_query($dbconn, $user_buyer);
               $user_seller_result = mysqli_query($dbconn, $user_seller);
@@ -218,7 +222,8 @@
                         }
 
 
-                      $records = ("SELECT * from transactions where seller_id = '$account_id'" );
+                      $records = ("SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) 
+                        as transactions where seller_id = '$account_id'" );
                       $records_result = mysqli_query($dbconn, $records);
                      ?>
 
@@ -231,7 +236,7 @@
     
       <div class="log_content">
           <img src="../images/user_pic.jpg" id="user_pic2">
-          <p id="act_content"><?= $message; ?><strong><?php echo $transaction_person;?></strong> <!--a class="btn btn-primary" name="view" data-toggle="modal" data-target="#myModalA">view</a--> </p>
+          <p id="act_content"><?= $message; ?><strong><?php echo $transaction_person;?></strong> <a class="btn btn-primary" name="view" data-toggle="modal" data-target="#myModalA">view</a> </p>
           <div id="act_date"><?php echo $transaction_date?></div>
 
       </div>
@@ -239,7 +244,8 @@
 
        <?php  
                      
-                     $records = ("SELECT * from transactions where seller_id = '$transaction_seller_id' and date = '$transaction_date' order by book_name" );
+                     $records = ("SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) as transactions
+                        where seller_id = '$transaction_seller_id' and date = '$transaction_date' order by book_name" );
                      $records_result = mysqli_query($dbconn, $records);?>
 
                      <table>
