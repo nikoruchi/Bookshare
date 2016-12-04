@@ -1,8 +1,8 @@
 <?php
-	include("connect.php");
-	include("search_book.php");
+  include("connect.php");
+  include("search_book.php");
   session_start();
-	?>
+  ?>
   <?php
     
       
@@ -26,14 +26,14 @@
 <!DOCTYPE html>
 <html class="no-js">
 <head>
-	<meta charset="utf-8">
-	<meta name="author" content="CMSC 128 Lab Sec. 2">
-	<meta name="description" content="Sell, buy, and trade books with your schoolmates.">
-	<meta name="keywords" content="Book, Books, Trade Book, Sell Book, Buy Book">
-	<title>Your Profile</title>
+  <meta charset="utf-8">
+  <meta name="author" content="CMSC 128 Lab Sec. 2">
+  <meta name="description" content="Sell, buy, and trade books with your schoolmates.">
+  <meta name="keywords" content="Book, Books, Trade Book, Sell Book, Buy Book">
+  <title>Your Profile</title>
 
   <link rel="shortcut icon" href="../images/official_logo.png">
-	<link rel="stylesheet" type="text/css" href="../css/style.css">
+  <link rel="stylesheet" type="text/css" href="../css/style.css">
   <link rel="stylesheet" type="text/css" href="../css/profile_style.css">
   <script src="../js/jquery.min.js"></script>
   <link rel="stylesheet" type="text/css" href="../css/normalize.css">
@@ -43,54 +43,54 @@
 
 </head>
 <body>
-	<div class="wrapper">
-	<header>
-		<nav>
-			<ul>
+  <div class="wrapper">
+  <header>
+    <nav>
+      <ul>
             <li class="nav_lib">
-            	<div>
-           			<a href="Library.php">
-           				<img src="../images/official_logo.png" title="Library" alt="Library" height="50" width="50" id="logo">
-           				<label for="library" id="logolabel">Library</label>
-           			</a>
-           		</div>
+              <div>
+                <a href="Library.php">
+                  <img src="../images/official_logo.png" title="Library" alt="Library" height="50" width="50" id="logo">
+                  <label for="library" id="logolabel">Library</label>
+                </a>
+              </div>
             </li>
             <li class="nav_srch">
-            	<span class="col-xs-4">            	
-            		<form method="post" action = "<?php $_PHP_SELF; ?>">
-						<input type="search" name="search" placeholder="Search..." class="form-control-srch" id="noborder">
-						<input type="submit" name="submit" value="GO" class="btn btn-success">
-					</form>
-				</span>
+              <span class="col-xs-4">             
+                <form method="post" action = "<?php $_PHP_SELF; ?>">
+            <input type="search" name="search" placeholder="Search..." class="form-control-srch" id="noborder">
+            <input type="submit" name="submit" value="GO" class="btn btn-success">
+          </form>
+        </span>
             </li>
             <li class="nav_prof">
-            	<div>
-            		<a href="Profile.php">
-            			<img src="<?php echo $user_image?>" title="Profile" alt="Profile" height="40" width="40" id="logo2">
-            			<label for="username"><?php echo $_SESSION['username'];?></label>
-            		</a>
-            	</div>
+              <div>
+                <a href="Profile.php">
+                  <img src="<?php echo $user_image?>" title="Profile" alt="Profile" height="40" width="40" id="logo2">
+                  <label for="username"><?php echo $_SESSION['username'];?></label>
+                </a>
+              </div>
             </li>
             <li class="nav_set">
-            	<div>
-            		<label for="settings">
-            			<a href="Settings.php">Settings</a> |
-            		</label>
-            	</div>
+              <div>
+                <label for="settings">
+                  <a href="Settings.php">Settings</a> |
+                </label>
+              </div>
             </li>
-           	<li class="nav_log">
-           		<div>
-           		<a href="index.php">
-           			<label for="logout" id="logout">Log-out</label>
-           		</a>
-           		</div>
-           	</li>
-        	</ul>
-		</nav>
-	</header>
-	<div class="container">
-			<a href="Profile.php"><h1 id="bookshelf">User Profile</h1></a>
-	  
+            <li class="nav_log">
+              <div>
+              <a href="index.php">
+                <label for="logout" id="logout">Log-out</label>
+              </a>
+              </div>
+            </li>
+          </ul>
+    </nav>
+  </header>
+  <div class="container">
+      <a href="Profile.php"><h1 id="bookshelf">User Profile</h1></a>
+    
     <div class="profile_header">
       <aside>
         <div>
@@ -147,14 +147,12 @@
     <!-- PHP NI DIRI -->
 
     <?php  
-
             $transaction_buyer; $transaction_seller; $transaction_date; $prev_buyer_id=""; $prev_seller_id=""; $prev_date="";
     
               
-              $activity = "SELECT * from transactions where  seller_id = '$account_id' or buyer_id = '$account_id' order by date desc, seller";
+              $activity = "SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`)))) 
+              as transactions where  seller_id = '$account_id' or buyer_id = '$account_id' order by date desc, seller";
               $activity_result = mysqli_query($dbconn, $activity);
-
-
               
      while($activity_row = mysqli_fetch_assoc($activity_result)){
              
@@ -163,12 +161,12 @@
               $transaction_date= $activity_row['date'];
               $transaction_buyer = $activity_row['buyer'];
               $transaction_seller= $activity_row['seller'];
-
               if($transaction_buyer_id != $prev_buyer_id || $transaction_seller_id != $prev_seller_id && $transaction_date != $prev_date){
-
-              $user_buyer = "SELECT * from transactions where buyer_id  = '$transaction_buyer_id' and date='$transaction_date'";
-              $user_seller = "SELECT * from transactions where seller_id = '$transaction_seller_id' and date='$transaction_date'";
-
+              $user_buyer = "SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) 
+              as transactions where buyer_id  = '$transaction_buyer_id' and date='$transaction_date'";
+             
+              $user_seller = "SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) 
+              as transactions where seller_id = '$transaction_seller_id' and date='$transaction_date'";
               $user_buyer_result = mysqli_query($dbconn, $user_buyer);
               $user_seller_result = mysqli_query($dbconn, $user_seller);
               $fetch_row;
@@ -180,7 +178,6 @@
           ?>
 
           <?php
-
                           $user_is_buyer=0; $transaction_person;
                               if($account_id == $transaction_seller_id){
                                 $transaction_person = $transaction_buyer;
@@ -194,29 +191,22 @@
             ?>
 
           <?php
-
                       $query; $query_result; $message;
-
                     if($user_is_buyer == 0){
-
                       $query = "SELECT message_details from message_content where message_id=1";
                       $query_result = mysqli_query($dbconn, $query);
-
                       while($fetch_row = mysqli_fetch_assoc($query_result)){
                           $message = $fetch_row['message_details'];
                         }}
             else{
                       $counter = 1;
-
                       $query = "SELECT message_details from message_content where message_id=2";
                       $query_result = mysqli_query($dbconn, $query);
-
                       while($fetch_row = mysqli_fetch_assoc($query_result)){
                           $message = $fetch_row['message_details'];
                         }
-
-
-                      $records = ("SELECT * from transactions where seller_id = '$account_id'" );
+                      $records = ("SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) 
+                        as transactions where seller_id = '$account_id'" );
                       $records_result = mysqli_query($dbconn, $records);
                      ?>
 
@@ -229,7 +219,7 @@
     
       <div class="log_content">
           <img src="../images/user_pic.jpg" id="user_pic2">
-          <p id="act_content"><?= $message; ?><strong><?php echo $transaction_person;?></strong> <!--a class="btn btn-primary" name="view" data-toggle="modal" data-target="#myModalA">view</a--> </p>
+          <p id="act_content"><?= $message; ?><strong><?php echo $transaction_person;?></strong> <a class="btn btn-primary" name="view" data-toggle="modal" data-target="#myModalA">view</a> </p>
           <div id="act_date"><?php echo $transaction_date?></div>
 
       </div>
@@ -237,7 +227,8 @@
 
        <?php  
                      
-                     $records = ("SELECT * from transactions where seller_id = '$transaction_seller_id' and date = '$transaction_date' order by book_name" );
+                     $records = ("SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) as transactions
+                        where seller_id = '$transaction_seller_id' and date = '$transaction_date' order by book_name" );
                      $records_result = mysqli_query($dbconn, $records);?>
 
                      <table>
@@ -252,7 +243,6 @@
                       <?php } ?> 
                     </table> 
       <?php 
-
     }
       $prev_buyer_id = $transaction_buyer_id;
       $prev_seller_id = $transaction_seller_id;
@@ -314,10 +304,10 @@
 
 <!-- DON'T -->
     </div>
-		<footer>
-			<p>A.Y. 2016-2017 Bookshare | &copy;CMSC 128 Lab Sec. 2 |  2016</p>
-		</footer>
-	</div>
+    <footer>
+      <p>A.Y. 2016-2017 Bookshare | &copy;CMSC 128 Lab Sec. 2 |  2016</p>
+    </footer>
+  </div>
 
 
 </body>
