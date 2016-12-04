@@ -3,8 +3,10 @@
 	include("search_book.php");
   session_start();
 	?>
+
+
   <?php
-    
+    //change queries
       
       $account_id = $_SESSION['buyer_id'];
       $user_query= "SELECT * from account where account_id='$account_id'";
