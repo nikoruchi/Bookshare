@@ -3,9 +3,7 @@
   include("search_book.php");
   session_start();
   ?>
-  <?php
-    
-      
+  <?php      
       $account_id = $_SESSION['buyer_id'];
       $user_query= "SELECT * from account where account_id='$account_id'";
       $user_result=mysqli_query($dbconn, $user_query);
@@ -39,6 +37,7 @@
   <link rel="stylesheet" type="text/css" href="../css/normalize.css">
   <script src="../js/modal.js"></script>
   <script src="../js/custom-file-input.js"></script>
+  <script src="../js/jquery.min.js"></script>
   <script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
 
 </head>
@@ -129,6 +128,9 @@
 
 <div class="activity_section">
   <div class="icon_section">
+      <a href="View_Bookmarks.php">
+        <img id="bookmark" src="../images/logo_bookmark.png" alt="Bookmarks" title="View your bookmarks">
+      </a>
       <a href="Bookshelf.php" id="bookshelf_section">
         <div id="image_bookshelf">
           <img src="../images/bookshelf.png">
@@ -210,38 +212,43 @@
                       $records_result = mysqli_query($dbconn, $records);
                      ?>
 
-                 <?php }
-                  ?>
+                 <?php } ?>
 
-    <!-- -->
-
-
-    
       <div class="log_content">
           <img src="../images/user_pic.jpg" id="user_pic2">
-          <p id="act_content"><?= $message; ?><strong><?php echo $transaction_person;?></strong> <a class="btn btn-primary" name="view" data-toggle="modal" data-target="#myModalA">view</a> </p>
+          <p id="act_content"><?= $message; ?><strong><?php echo $transaction_person;?></strong><br> 
+           </p>
           <div id="act_date"><?php echo $transaction_date?></div>
-
-      </div>
-
-
-       <?php  
-                     
-                     $records = ("SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) as transactions
+      
+<?php                       
+        $records = ("SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) as transactions
                         where seller_id = '$transaction_seller_id' and date = '$transaction_date' order by book_name" );
-                     $records_result = mysqli_query($dbconn, $records);?>
+        $records_result = mysqli_query($dbconn, $records);?>
 
-                     <table>
+  <div class="box">
+    <div class="top">
+      <button class="btn btn-primary" name="view" id="view">Book List</button>
+    </div>
+    <div class="bottom">
+      <table>
+      <tr>
+        <th>Book</th>
+        <th>Price</th>
+      </tr>
+        <?php while($records_row = mysqli_fetch_assoc($records_result)) {?>
+        <tr>
+          <td><a href="Book_info.php?id=<?php echo $row["book_id"];?>"><?php echo $records_row['book_name'];?></a></td>
+          <td>Php<?php echo $records_row['book_price'];?></td>
+        </tr>
+        <?php } ?> 
+      </table> 
+    </div>
+  </div>
 
-                     
-                    <?php while($records_row = mysqli_fetch_assoc($records_result)) {?>
-                      <tr>
-                        <td><a href="Book_info.php?id=<?php echo $row["book_id"];?>"><?php echo $records_row['book_name'];?></a></td>
-                        <td><?php echo $records_row['book_price'];?></td>
+</div>
+  
 
-                      </tr>
-                      <?php } ?> 
-                    </table> 
+                    
       <?php 
     }
       $prev_buyer_id = $transaction_buyer_id;
@@ -252,56 +259,6 @@
 
     </div>
 </div>
-
-
-<!-- BOUGHT BOOKS MODAL-->
-<div class="modal fade" id="myModalA" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-      <form method="post" action="<?php $_PHP_SELF; ?>" enctype="multipart/form-data">
-        <div class="modal-header">
-          <h4 class="modal-title">Books you bought from <?php echo "seller"?></h4>
-        </div>
-        <div class="modal-body">  
-            bought BOOKS HERE
-          </div>
-        <div class="modal-footer">
-            <form method="post" action="<?php $_PHP_SELF; ?>" >
-        <input type="submit" value="UPDATE" name="save_pic" class="btn btn-default">
-        <input type="submit" value="CANCEL" class="btn btn-danger">
-      </form>
-        </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- SOLD BOOKS MODAL-->
-<div class="modal fade" id="myModalB" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-      <form method="post" action="<?php $_PHP_SELF; ?>" enctype="multipart/form-data">
-        <div class="modal-header">
-          <h4 class="modal-title">Books you sold to <?php echo "buyer"?></h4>
-        </div>
-        <div class="modal-body">  
-            SOLD BOOKS HERE
-          </div>
-        <div class="modal-footer">
-            <form method="post" action="<?php $_PHP_SELF; ?>" >
-        <input type="submit" value="CANCEL" class="btn btn-danger">
-      </form>
-        </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- DON'T -->
     </div>
     <footer>
@@ -312,3 +269,12 @@
 
 </body>
 </html>
+
+<!-- TOGGLES -->
+<script>
+$('.top').on('click', function() {
+  $parent_box = $(this).closest('.box');
+  $parent_box.siblings().find('.bottom').slideUp();
+  $parent_box.find('.bottom').slideToggle(200, 'swing');
+});
+</script>
