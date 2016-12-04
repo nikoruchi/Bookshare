@@ -20,8 +20,18 @@
 
 		if(isset($_GET['ID'])){
 			$search = $_GET["ID"];
-			$que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE book_name LIKE '%$search%' OR book_author LIKE '%$search%' OR book_subject LIKE '%$search%' ";
-			$result = mysqli_query($dbconn,$que);
+			$que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE book_name LIKE '%$search%'";
+			$result_bookname = mysqli_query($dbconn,$que);
+
+			$que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE book_author LIKE '%$search%'";
+			$result_author = mysqli_query($dbconn,$que);
+
+			$que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE book_subject LIKE '%$search%' ";
+			$result_subject = mysqli_query($dbconn,$que);
+
+			$que="SELECT * FROM account WHERE account_name LIKE '%$search%' and account_id != '$id'";
+			$result_account = mysqli_query($dbconn,$que);
+
 		} else {
 			echo "Not found";
 		}	?>
@@ -87,20 +97,75 @@
 	</header>
 	<div class="container">
 			<h2 id="tag_results">Search results for "<?php echo $search ?>"...</h2>
-	<div class=" shelf_section well well-sm " >	
+	<div class=" shelf_section well well-sm " >
+
+	<h1>Result by Book Title</h1>
 	<?php
-		if(mysqli_num_rows($result)>0){ 
-				while($row=mysqli_fetch_assoc($result)){ 
+		if(mysqli_num_rows($result_bookname)>0){ 
+				while($row=mysqli_fetch_assoc($result_bookname)){ 
 					$id = $row['book_id'];?>
 					<a class="bookshelf_book_container" href="Public_book_info.php?id=<?=$row['book_id']?>">
 						<content class="bookshelf_book"><img title="Upload Image" alt="Upload Image" height="225" width="150" class="" src="<?php echo $row['book_imagepath']; ?>">
-							<label>Php<?=$row["book_price"];?><br><?=$row["book_name"];?></label>
 						</content>
+						<label for="book_title" id="book_title"> <?=shorten($row['book_name']);?> </label>
 					</a>
 		<?php	} 
 		} ?>
 
 	</div>
+
+	<div class=" shelf_section well well-sm " >
+
+	<h1>Result by Book Author</h1>
+	<?php
+		if(mysqli_num_rows($result_author)>0){ 
+				while($row=mysqli_fetch_assoc($result_author)){ 
+					$id = $row['book_id'];?>
+					<a class="bookshelf_book_container" href="Public_book_info.php?id=<?=$row['book_id']?>">
+						<content class="bookshelf_book"><img title="Upload Image" alt="Upload Image" height="225" width="150" class="" src="<?php echo $row['book_imagepath']; ?>">
+						</content>
+						<label for="book_title" id="book_title"> <?=shorten($row['book_name']);?> </label>
+					</a>
+		<?php	} 
+		} ?>
+
+	</div>
+
+	<div class=" shelf_section well well-sm " >
+
+	<h1>Result by Book Subject</h1>
+	<?php
+		if(mysqli_num_rows($result_subject)>0){ 
+				while($row=mysqli_fetch_assoc($result_subject)){ 
+					$id = $row['book_id'];?>
+					<a class="bookshelf_book_container" href="Public_book_info.php?id=<?=$row['book_id']?>">
+						<content class="bookshelf_book"><img title="Upload Image" alt="Upload Image" height="225" width="150" class="" src="<?php echo $row['book_imagepath']; ?>">
+						</content>
+						<label for="book_title" id="book_title"> <?=shorten($row['book_name']);?> </label>
+					</a>
+		<?php	} 
+		} ?>
+
+	</div>
+
+
+	<div class=" shelf_section well well-sm " >
+
+	<h1>Result by Bookshare Users</h1>
+	<?php
+		if(mysqli_num_rows($result_account)>0){ 
+				while($row=mysqli_fetch_assoc($result_account)){ 
+					?>
+					<label for='seller' class="info1_items"><a href="<?php echo "Seller_profile.php?seller=".$row["account_id"];?>"><?php echo $row["account_name"] ?></a></label>
+		<?php	} 
+		} ?>
+
+	</div>
+
+
+
+	</div>
+
 	<content id="prev_next">
 	 	<a href=" " id="prev" ><< Prev </a> &nbsp;|&nbsp;
 	 	<a href=" " id="next" >Next >> </a>
