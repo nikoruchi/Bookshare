@@ -24,6 +24,13 @@
 	font-size: 28px;
 }
 /*CUSTOM*/
+.library_section label{
+  height: 25px;
+  text-align: left;
+  text-decoration: underline;
+  padding-top: 2px;
+  font-size: 20px;
+}
 .categories table{
 	font-size: 20px;
 	margin: 15px 14px;
