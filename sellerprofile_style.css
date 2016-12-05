@@ -1,0 +1,45 @@
+/*CONTAINERS*/
+
+.pub_shelf{
+	width: 779px;
+	margin-left:93px;
+	margin-top: 20px;
+	padding: 0 15px 10px 15px;
+	font-family: 'Microsoft Yi Baiti';
+}
+/*CUSTOMS*/
+#pub_shelf{
+	font-family: 'GiovanniITCTT';
+	letter-spacing: 2px; 
+	font-size: 40px;
+	text-align: center;
+	padding-bottom: 0;
+	color: #56372E;
+}
+#image_bookshelf img, #label_bookshelf img{
+	width: 60px;
+	height: 60px;	
+}
+#label_bookshelf{
+	margin-top: -54px;
+	padding-right: 20px;
+	padding-left: 50px;	
+}
+#label_bookshelf img{
+	width: auto;
+	height: 40px;
+	background-color: rgba(0,0,0,0.5);
+}
+#image_bookshelf img{
+	position: relative;
+}
+#label_bookshelf img:hover{
+	box-shadow: 2px 2px 2px gray;
+}
+#course{
+	font-family: 'Raleway Medium';
+}
+.shelf_prevnext{
+	margin-left: 760px;
+  	font-family: 'Microsoft Yi Baiti';
+}

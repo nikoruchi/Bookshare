@@ -1,0 +1,177 @@
+/*CONTAINERS*/
+.profile_header{
+	margin-left: 30px;
+}
+#profile_side{
+	margin: -242px 285px;
+	padding-left: 10px;
+	width: 600px;
+	font-family: 'Raleway Light';
+	position: absolute;
+}
+#prof_name{
+	width: auto;
+	background-color: rgba(0,0,0,0.1);
+	padding:2px;
+}
+.activity_section{
+	margin-top: 40px;
+}
+#contact_section{
+	padding-top: 6px;
+}
+.notif_section{
+	margin-left: 15px;
+	top: 270px;
+	width: 95%;
+	padding: 8px;
+}
+#bookshelf_section{
+	margin-top: -65px;
+    margin-left: 700px;
+    float: right;
+    height: 60px;
+}
+#yrlvl_course{
+	font-family: 'Raleway Light';
+	text-align: center;
+	width: 190px;
+	margin-left: 90px;
+}
+
+/*CUSTOMS*/
+#user_pic{
+	width: 190px;
+	height: 190px;
+	padding-left: 90px;
+}
+#multi_inputs{
+	display: block;
+	padding-left: 10px;
+}
+#accountname{
+	font-size: 25px;
+	font-family: 'Raleway Medium';
+	padding: 2px;
+}
+#username{
+	margin-top: -9px;
+	color: rgba(0,0,0,0.6);
+	padding-left: 4px;
+}
+#contact_section label{
+	font-weight: 700;
+}
+ #cart,#bookmark, #image_bookshelf img, #label_bookshelf img{
+	width: 60px;
+	height: 60px;	
+}
+#bookmark{
+	transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+	margin-left: 680px;
+}
+#cart:hover, #bookmark:hover{
+	transform: scale(1.15, 1.15);
+}
+#cart{
+	transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+	margin-left: -135px;
+}
+#label_bookshelf{
+	margin-top: -54px;
+	padding-right: 20px;
+	padding-left: 50px;	
+}
+#label_bookshelf img{
+	width: auto;
+	height: 40px;
+	background-color: rgba(0,0,0,0.5);
+}
+
+#image_bookshelf img{
+	position: relative;
+}
+#label_bookshelf img:hover{
+	box-shadow: 2px 2px 2px gray;
+}
+#course{
+	font-family: 'Raleway Medium';
+}
+
+/*ACTIVITY LOG*/
+.notif_section h2{
+	text-align: center;
+	margin-top: 0;	
+	font-family: 'Playfair Display';
+	letter-spacing: 2px;
+	font-size: 35px;
+	color: #56372E;
+}
+.log_content{
+	font-family: 'Raleway Light';
+	background-color: rgba(104,66,55,0.1);
+	border-radius: 4px;
+	border: 1px solid rgba(104,66,55,0.2);
+	height: 90px;
+	margin-bottom: 10px;
+}
+.log_content:hover{
+	border: 2px solid rgba(120,66,55,0.6);
+	transition: 0.3s;
+}
+#act_content{
+	font-size: 18px;
+	margin: -70px 90px;
+	display: block;
+}
+#user_pic2{
+	width: 70px;
+	height: 70px;
+	padding: 10px;
+}
+#act_date{
+    color: gray;
+    font-size: 10px;
+    float: right;
+    margin-right: 10px;
+    margin-top: 30px;
+}
+table{
+	margin-left: 70px;
+	padding: 10px;
+}
+
+/*TOGGLES*/
+.box{
+	margin-left: 90px;
+	margin-top: 73px;
+}
+.bottom{
+	border: 3px solid rgba(120,66,55,0.6);
+	position: relative;
+	background-color: white;
+	width: 60%;
+	padding: 20px;
+	border-radius: 5px;
+	font-size: 20px;
+	top: -180px;
+	left: 100px;
+}
+.box .bottom{
+	display: none;
+}
+.bottom td{
+	padding-top: 10px;
+}
+.bottom tr{
+	text-align: left;
+}
+.bottom tr a{
+	padding-right: 20px;
+}
+.bottom th{
+	padding-bottom: 5px;
+}
+#total{
+	border-top: 2px solid rgba(120,66,55,0.6);
+}

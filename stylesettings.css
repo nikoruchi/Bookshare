@@ -1,0 +1,190 @@
+/*CONTAINERS*/
+.set_section{
+    width: 700px;
+    height: 850px;
+    margin: -20px 140px;
+    font-family: 'Raleway Light';
+    display: block;
+    font-size: 20px;
+    padding: 5px;
+}
+.upload_center{
+    width: 180px;
+}
+#input1{
+    z-index: 1;
+    left: 80px;
+}
+#field1{
+    z-index: 1;
+    left: -220px;
+    top: 300px;
+    border-top: 1px solid gray;
+}
+.action_set{
+    width: 110px;
+    margin: -4px 100px;
+    padding-bottom: 6px;
+}
+.set-btn-container{
+    width: 200px;
+    height: 40px;
+    margin: 580px 440px;
+    position: relative;
+}
+.data_section{
+    width: 480px;
+    height: auto;
+    padding-left: 10px;
+    padding-right: 20px;
+    float: right;
+}
+.data{
+    margin-top: -20px;
+    padding: 20px 5px;
+}
+.data span{
+    display: block;
+    padding: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+.set_section aside{
+    width: 170px;
+    padding-left: 15px;
+    float: left;
+}
+.box,.edit_user_pic_section, .box input[type=text]{
+    margin-left: 184px;
+}
+/*CUSTOM EDITS*/
+.modal-body{
+    text-align: center;
+}
+.password label{
+    padding-top: 13px;
+}
+#user_pic, #user_pic_edit{
+    width: 170px;
+    height: 170px;
+}
+#modal_label{
+    margin-left: 170px;
+    padding-bottom: 4px;
+}
+#modal_label2{
+    margin-left: 155px;
+}
+.box div{
+    padding-bottom: 10px;
+}
+.fileUpload {
+    overflow: hidden;
+    margin-left: 232px;
+    margin-top: -3px;
+}
+.fileUpload input[type=file] {
+    position: relative;
+    width: 7px;
+    height: 2px;
+    font-size: 5px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+#user_pic{
+    margin: 60px -2px;
+}
+#user_pic_edit{
+    margin-left: 15px;
+    padding-bottom: 10px;
+}
+.data_section h2{
+    padding: 5px;
+    background-color: rgba(0,0,0,0.1);
+}
+.data label, .data content{
+    display: inline;
+}
+.data label{
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+#contact{
+    border: none;
+}
+#multi_inputs{
+    display: block;
+}
+#multi_inputs content {
+    padding-left: 15px;
+}
+#perso content{
+    padding-left: 20px;
+    font-size: 18px;
+}
+.settings{
+    font-family: 'GiovanniITCTT';
+    margin-left: 150px;
+    margin-bottom: 15px;
+    font-size: 50px;
+    width: auto;
+}
+
+/*BOOTSTRAP*/
+/*BOOK INFO TEXTFIELDS*/
+.form-control-set {
+  width: auto;
+  display: block;
+  width: 190px;
+  height: 34px;
+  padding: 2px 5px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+       -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+          transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+.form-control-set:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+          box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+}
+.form-control-set::-moz-placeholder {
+  color: #999;
+  opacity: 1;
+}
+.form-control-set:-ms-input-placeholder {
+  color: #999;
+}
+.form-control-set::-webkit-input-placeholder {
+  color: #999;
+}
+.form-control-set::-ms-expand {
+  background-color: transparent;
+  border: 0;
+}
+.form-control-set[disabled],
+.form-control-set[readonly],
+fieldset[disabled] .form-control-set {
+  background-color: #eee;
+  opacity: 1;
+}
+.form-control-set[disabled],
+fieldset[disabled] .form-control-set {
+  cursor: not-allowed;
+}
+textarea.form-control-set {
+  height: auto;
+}
