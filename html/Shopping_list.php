@@ -1,8 +1,14 @@
-
 <?php
 	include("connect.php");
 	include("search_book.php");
 	session_start();
+	date_default_timezone_set('Asia/Manila');
+	$date=date("Y-m-d");
+	$buyer_id = $_SESSION['buyer_id'];
+	$user_query= "SELECT * from account where account_id='$buyer_id'";
+    $user_result=mysqli_query($dbconn, $user_query);
+    $row_session = mysqli_fetch_assoc($user_result);
+    $user_image = $row_session['account_imagepath'];
 ?>
 
 <!DOCTYPE html>
@@ -74,59 +80,38 @@
 		<div class=" list_section well well-sm" > 
 
 		<?php
-	//		$select_query = "SELECT book_name, account_name, book_price from books join account on books.account_id=account.account_id join cart on cart.book_id=books.book_id";
-	//		$result = mysqli_query($dbconn, $select_query);
-
-	//		if(mysqli_num_rows($result)>0){
-	//			while($row=mysqli_fetch_assoc($result)){?>
+			$buyer_id = $_SESSION['buyer_id'];
+			$select_query = "SELECT * from books join account on books.account_id=account.account_id join cart on cart.book_id=books.book_id WHERE cart.buyer_id='$buyer_id' AND date='$date'";
+			$result = mysqli_query($dbconn, $select_query);
+			if(mysqli_num_rows($result)>0){
+				while($row=mysqli_fetch_assoc($result)){?>
 
 
 			<div class="list_content">
-          		<img id="thumbnail" src="../images/default.jpg">
+          		<img id="thumbnail" src=" <?php echo $row['book_imagepath']?>">
           		<p id="content">
-          			<strong><?php echo "450"?></strong>
-          			<label id="bookname"><?php echo "BOOK TITLE"?></label>
-					<label id="accname"><?php echo "ACC NAME"?></label>
+          			<strong>Php<?php echo $row['book_price']?></strong>
+          			<label id="bookname"><?php echo $row['book_name']?></label>
+					<label id="accname"><?php echo $row['account_name']?></label>
           		</p>
       		</div>
-      		<div class="list_content">
-          		<img id="thumbnail" src="../images/default.jpg">
-          		<p id="content">
-          			<strong><?php echo "450"?></strong>
-          			<label id="bookname"><?php echo "BOOK TITLE"?></label>
-					<label id="accname"><?php echo "ACC NAME"?></label>
-          		</p>
-      		</div>
-
-				<!-- <table>
-					<tr>
-						<td> <img id="thumbnail" src="../images/default.jpg"></td> 
-						<td><?php echo "bookname"?></td>
-						<td><?php echo "USER"?></td>
-						<td><?php echo "price"?></td>
-
-						<!-- <td><?php echo $row['book_name']?></td>
-						<td><?php echo $row['account_name']?></td>
-						<td><?php echo $row['book_price']?></td> -->
-					<!-- </tr> -->
-				<!-- </table> -->
+      		
+				
 			
 				<?php
-			//	}
-			//}
+				}
+			}
+			$subtotal = "SELECT sum(book_price) as Price from books join cart on cart.book_id=books.book_id WHERE cart.buyer_id='$buyer_id'";
+			$retresult = mysqli_query($dbconn,$subtotal);
+			if(mysqli_num_rows($retresult)>0){
+				while($row=mysqli_fetch_assoc($retresult)){
+					$price_result = $row['Price'];
+				}
+				?>
 
-			//$subtotal = "SELECT sum(book_price) as Price from books join cart on cart.book_id=books.book_id";
-			//$retresult = mysqli_query($dbconn,$subtotal);
-			//if(mysqli_num_rows($retresult)>0){
-			//	while($row=mysqli_fetch_assoc($retresult)){
-		//			$price_result = $row['Price'];
-		//		?>
 
-
-				<div class="foot">Subtotal: <content><?php echo "Price_result"?></content></div>
-			<?php
-		//		}
-		//	}?>
+				<div class="foot">Subtotal: <content>Php<?php echo $price_result?></content></div>
+	<?php 	} ?>
 			<form id="proceed"> <!-- Authentication will be a nightmare. Probably need PHP sessions or something -->
 				<p><a href="" data-toggle="modal" data-target="#myModalP">Checkout</a></p>
 				<!-- cancel link here-->
@@ -139,7 +124,6 @@
     
       <!-- Modal content-->
       <div class="modal-content">
-      <form method="post" action="<?php $_PHP_SELF; ?>" >
         <div class="modal-header">
           <h4 class="modal-title">Your request has been sent</h4>
         </div>
@@ -147,11 +131,10 @@
 			Please wait for the book owner/s to contact you with details.
         </div>
         <div class="modal-footer">
-            <form method="post" action="<?php $_PHP_SELF; ?>" >
+            <form method="post" action="checkout.php" >
             	<a href="Checkout.php"><button class="btn btn-success">Proceed</button></a>
 			</form>
         </div>
-        </form>
       </div>
     </div>
   </div>
@@ -165,3 +148,5 @@
 	</div>
 </body>
 </html>
+Contact GitHub API Training Shop Blog About
+© 2016 GitHub, Inc. Terms Privacy Security Status Help

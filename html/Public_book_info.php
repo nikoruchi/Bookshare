@@ -2,17 +2,13 @@
 	include("connect.php");
 	include("search_book.php");
 	session_start();
-
 	date_default_timezone_set('Asia/Manila');
 	$date=date("Y-m-d");
-
 	$buyer_id = $_SESSION['buyer_id'];
 	$user_query= "SELECT * from account where account_id='$buyer_id'";
     $user_result=mysqli_query($dbconn, $user_query);
     $row_session = mysqli_fetch_assoc($user_result);
     $user_image = $row_session['account_imagepath'];
-
-
 	if(isset($_GET['id'])){
 		$id = $_GET['id'];
 		$quer = "SELECT * FROM books b JOIN book_info bi ON b.book_id=bi.book_id WHERE b.book_id='$id'";
@@ -33,28 +29,28 @@
 	} else{
 		msg("cant display book_info.");
 	}
-
 	$seller1="SELECT * FROM account WHERE account_id='$seller'";
 	$seller11=mysqli_query($dbconn,$seller1);
 	$row=mysqli_fetch_assoc($seller11);
 	$sellername=$row["account_name"];
-
-
 	if(isset($_POST['add_to_cart'])){
-		$sql = "INSERT INTO cart (seller_id, book_id, buyer_id, date) VALUES ('$seller', '$id', '$buyer_id','$date')";
-		$sqlresult = mysqli_query($dbconn,$sql);
-		if($sqlresult){
-			header("Location:Shopping_list.php");
+		$sqlee = "SELECT * FROM cart WHERE seller_id='$seller' AND book_id='$id' AND buyer_id='$buyer_id'";
+		$sqle = mysqli_query($dbconn,$sqlee);
+		if(mysqli_num_rows($sqle)>0){
+			msg("you already add this book in your cart.");
 		} else {
-			msg("unable to add book.");
-		}
+			$sql = "INSERT INTO cart (seller_id, book_id, buyer_id, date) VALUES ('$seller', '$id', '$buyer_id','$date')";
+			$sqlresult = mysqli_query($dbconn,$sql);
+			if($sqlresult){
+				header("Location:Shopping_list.php");
+			} else {
+				msg("unable to add book.");
+			}
+		} 
 	}
-
-
 	if(isset($_POST['unbookmark'])){
 		
 	}
-
   function msg($mess){?>    
     <p><?=$mess;?></p>
     <?php }

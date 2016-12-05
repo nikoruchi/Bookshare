@@ -53,12 +53,12 @@
               </div>
             </li>
             <li class="nav_srch">
-              <span class="col-xs-4">             
+              <span class="col-xs-2">             
                 <form method="post" action = "<?php $_PHP_SELF; ?>">
-            <input type="search" name="search" placeholder="Search..." class="form-control-srch" id="noborder">
-            <input type="submit" name="submit" value="GO" class="btn btn-success">
-          </form>
-        </span>
+                  <input type="search" name="search" placeholder="Search..." class="form-control-srch" id="noborder">
+                  <input type="submit" name="submit" value="GO" class="btn btn-success">
+                </form>
+              </span>
             </li>
             <li class="nav_prof">
               <div>

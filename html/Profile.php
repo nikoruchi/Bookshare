@@ -131,6 +131,9 @@
       <a href="View_Bookmarks.php">
         <img id="bookmark" src="../images/logo_bookmark.png" alt="Bookmarks" title="View your bookmarks">
       </a>
+      <a href="Shopping_list.php">
+        <img id="cart" src="../images/cart.png" alt="Shopping List" title="Go to your Shopping List">
+      </a>
       <a href="Bookshelf.php" id="bookshelf_section">
         <div id="image_bookshelf">
           <img src="../images/bookshelf.png">
@@ -239,8 +242,12 @@
         <tr>
           <td><a href="Book_info.php?id=<?php echo $row["book_id"];?>"><?php echo $records_row['book_name'];?></a></td>
           <td>Php<?php echo $records_row['book_price'];?></td>
-        </tr>
         <?php } ?> 
+        </tr>
+        <tr >
+          <td id=total>Total:</td>
+          <td id=total><?= '0000' ?>
+        </tr>
       </table> 
     </div>
   </div>
