@@ -1,29 +1,62 @@
 .result_section{
 	margin-top: 9px;
-	width: 939px;
+	width: 970px;
 	height: 800px;
-	margin: 20px 22px;
+	margin: 20px 17px;
 	font-size: 20px;
-  	font-family: 'Microsoft Yi Baiti';
+  font-family: 'Microsoft Yi Baiti';
 }
 
 /*------CUSTOMS------*/
 .sort_result ul{
-	/*text-align: center;*/
 	padding: 10px;
 	color: #502518;
 }
 .sort_result li {
 	list-style-type: none;
 	display: inline-block;
-	/*position: relative;*/
 }
 .sort_result a{
 	font-family: 'Playfair Display';
 	font-size: 26px;
-	/*color: #A06D5D;*/
 	padding: 0 10px 0 10px;
 	font-weight: 500;
+}
+#res_prev_next{
+  float: right;
+  font-size: 15px;
+  padding-bottom: 5px;
+}
+
+/*USER RESULTS*/
+#user{
+  height: 90px;
+}
+#user_label, #seller_pic{
+  display: inline;
+}
+#no_line,#no_line2{
+  display: block;
+  font-family: 'Raleway Light';
+  margin-left: 84px;
+  color: gray;
+  text-decoration: none;
+}
+#no_line{
+  font-size: 25px;
+  margin-top: -70px;
+}
+#no_line a{
+  font-weight: 600;
+  color: black;
+}
+#user_label a:hover{
+  text-decoration: underline;
+}
+#seller_pic{
+  width: 75px;
+  height: 75px;
+  padding: 5px;
 }
 
 /*BOOTSTRAP*/
