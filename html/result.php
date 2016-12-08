@@ -6,22 +6,23 @@
 <?php
     $id = $_SESSION['buyer_id'];
     $user_query= "SELECT * from account where account_id='$id'";
-      $user_result=mysqli_query($dbconn, $user_query);
-      $row_session = mysqli_fetch_assoc($user_result);
-      $user_image = $row_session['account_imagepath'];
+    $user_result=mysqli_query($dbconn, $user_query);
+    $row_session = mysqli_fetch_assoc($user_result);
+    $user_image = $row_session['account_imagepath'];
     if(isset($_GET['ID'])){
       $search = $_GET["ID"];
-      $que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE book_name LIKE '%$search%'";
-      $result_bookname = mysqli_query($dbconn,$que);
-      $que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE book_author LIKE '%$search%'";
-      $result_author = mysqli_query($dbconn,$que);
-      $que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE book_subject LIKE '%$search%' ";
-      $result_subject = mysqli_query($dbconn,$que);
-      $que="SELECT * FROM account WHERE account_name LIKE '%$search%' and account_id != '$id'";
-      $result_account = mysqli_query($dbconn,$que);
     } else {
       echo "Not found";
-    } ?>
+    }
+
+	if(isset($_GET['page'])){
+    	$page=$_GET['page'];
+  	}else{
+  		$page=1;
+  	}
+
+  	$resultperpage = 18;
+?>
 
 <!DOCTYPE html>
 <html>
@@ -89,18 +90,32 @@
       <h2 id="tag_results">Search results for "<?php echo $search ?>"...</h2>
 <div class="sort_result">
     <ul class="nav nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#title">Book Title</a></li>
-      <li><a data-toggle="tab" href="#author">Book Author</a></li>
-      <li><a data-toggle="tab" href="#subject">Book Subject</a></li>
-      <li><a data-toggle="tab" href="#user">Bookshare User</a></li>
+      <li ><a  href="result.php?ID=<?php echo $search?>&amp;key=title">Book Title</a></li>
+      <li><a href="result.php?ID=<?php echo $search?>&amp;key=author">Book Author</a></li>
+      <li><a  href="result.php?ID=<?php echo $search?>&amp;key=subject">Book Subject</a></li>
+      <li><a  href="result.php?ID=<?php echo $search?>&amp;key=user">Bookshare User</a></li>
     </ul>
 </div>
-  <div class=" result_section well well-sm " >
 
-<div class="tab-pane fade in active" id="title">
+<div class=" result_section " >
+
   <?php
-    if(mysqli_num_rows($result_bookname)>0){ 
-        while($row=mysqli_fetch_assoc($result_bookname)){ 
+  	if(isset($_GET['key'])){
+  		$key=$_GET['key'];
+  	}else{
+  		$key="title";
+  	} ?>
+
+<?php
+  if($key=="title"){ 	
+   	$start_from = ($page-1)*$resultperpage;
+   	$que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE book_name LIKE '%$search%' order by b.book_id asc limit $start_from,".$resultperpage;
+    $result_bookname = mysqli_query($dbconn,$que);
+  if(mysqli_num_rows($result_bookname)>0){ ?>
+
+<div class="sorted well well-sm ">
+<?php   
+      while($row=mysqli_fetch_assoc($result_bookname)){ 
           $id = $row['book_id'];?>
           <a class="bookshelf_book_container" href="Public_book_info.php?id=<?=$row['book_id']?>">
             <content class="bookshelf_book">
@@ -108,63 +123,112 @@
               <label>Php<?=$row['book_price'];?></label>
             </content>
           </a>
-    <?php } 
-    } ?>
+
+<?php } ?>
 </div>
 
-  <div class=" tab-pane fade"  id="author" >
-  <?php
-    if(mysqli_num_rows($result_author)>0){ 
-        while($row=mysqli_fetch_assoc($result_author)){ 
-          $id = $row['book_id'];?>
-          <a class="bookshelf_book_container" href="Public_book_info.php?id=<?=$row['book_id']?>">
+<content id="res_prev_next">
+	<a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=title" id="prev" ><< Prev </a> &nbsp;|&nbsp;
+	<a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=title" id="next" >Next >> </a>
+</content>
+
+<?php    } else {?>
+    		  <p> No result for keyword "<?php echo $search;?>". </p>
+<?php    }
+  }
+
+  elseif($key=="author"){
+  	$start_from = ($page-1)*$resultperpage;
+  	$que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE book_author LIKE '%$search%' order by b.book_id asc limit $start_from,".$resultperpage;
+    $result_author = mysqli_query($dbconn,$que);
+    if(mysqli_num_rows($result_author)>0){ ?>
+
+<div class="sorted well well-sm ">
+<?php   
+      while($row1=mysqli_fetch_assoc($result_author)){ 
+          $id = $row1['book_id'];?>
+          <a class="bookshelf_book_container" href="Public_book_info.php?id=<?=$id?>">
             <content class="bookshelf_book">
-              <img title="<?=$row['book_name']?>" alt="<?=$row['book_name']?>" height="225" width="150" class="" src="<?php echo $row['book_imagepath']; ?>">
-              <label>Php<?=$row["book_price"];?></label>
+              <img title="<?=$row1['book_name']?>" alt="<?=$row1['book_name']?>" height="225" width="150" class="" src="<?php echo $row1['book_imagepath']; ?>">
+              <label>Php<?=$row1["book_price"];?></label>
             </content>
           </a>
-    <?php } 
-    } ?>
+<?php } ?>
+</div>    
 
-  </div>
+<content id="res_prev_next">
+	<a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=author" id="prev" ><< Prev </a> &nbsp;|&nbsp;
+	<a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=author" id="next" >Next >> </a>
+</content>
 
-  <div class=" tab-pane fade" id="subject">
-  <?php
-    if(mysqli_num_rows($result_subject)>0){ 
-        while($row=mysqli_fetch_assoc($result_subject)){ 
-          $id = $row['book_id'];?>
-          <a class="bookshelf_book_container" href="Public_book_info.php?id=<?=$row['book_id']?>">
+
+<?php    } else {?>
+    		  <p> No result for keyword "<?php echo $search;?>". </p>
+<?php    } 
+   }
+
+  elseif($key=="subject"){
+    $start_from = ($page-1)*$resultperpage;
+  	$que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE book_subject LIKE '%$search%' order by b.book_id asc limit $start_from,".$resultperpage;
+    $result_subject = mysqli_query($dbconn,$que);
+    if(mysqli_num_rows($result_subject)>0){ ?>
+
+<div class="sorted well well-sm ">
+<?php
+      while($row2=mysqli_fetch_assoc($result_subject)){ 
+          $id = $row2['book_id'];?>
+          <a class="bookshelf_book_container" href="Public_book_info.php?id=<?=$id?>">
             <content class="bookshelf_book">
-              <img title="<?=$row['book_name']?>" alt="<?=$row['book_name']?>" height="225" width="150" class="" src="<?php echo $row['book_imagepath']; ?>">
-              <label>Php<?=$row["book_price"];?></label>
+              <img title="<?=$row2['book_name']?>" alt="<?=$row2['book_name']?>" height="225" width="150" class="" src="<?php echo $row2['book_imagepath']; ?>">
+              <label>Php<?=$row2["book_price"];?></label>
             </content>
-            
           </a>
-    <?php } 
-    } ?>
+<?php } ?>
+</div>
+
+<content id="res_prev_next">
+	<a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=subject" id="prev" ><< Prev </a> &nbsp;|&nbsp;
+	<a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=subject" id="next" >Next >> </a>
+</content>
+
+<?php    } else {?>
+    		  <p> No result for keyword "<?php echo $search;?>". </p>
+<?php    } 
+  }
+
+  elseif($key=="user"){
+  	$start_from = ($page-1)*$resultperpage;
+  	$que="SELECT * FROM account WHERE account_name LIKE '%$search%' and account_id != '$id' order by account_id asc limit $start_from,".$resultperpage;
+    $result_account = mysqli_query($dbconn,$que);
+    if(mysqli_num_rows($result_account)>0){ ?>
+
+<div class="sorted">
+<?php
+      while($row3=mysqli_fetch_assoc($result_account)){ 
+        $image = $row3['account_imagepath'];
+        $course = $row3['course'];?>
+        <div id="user" class="well well-sm">
+          <img id="seller_pic" src="<?=$image?>">
+          <label for='seller' id="no_line"><a href="<?php echo "Seller_profile.php?seller=".$row3["account_id"];?>"><?php echo $row3["account_name"] ?></a></label>
+          <label for='course_seller' id="no_line2"><?php echo $course?></label>
+        </div>
+<?php } ?>    	
+</div>
+
+<content id="res_prev_next">
+	<a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=user" id="prev" ><< Prev </a> &nbsp;|&nbsp;
+	<a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=user" id="next" >Next >> </a>
+</content>
+
+<?php    } else {?>
+    		  <p> No result for keyword "<?php echo $search;?>". </p>
+<?php    }
+   } ?>
 
   </div>
 
 
-  <div class="tab-pane fade" id="user">
-  <?php
-    if(mysqli_num_rows($result_account)>0){ 
-        while($row=mysqli_fetch_assoc($result_account)){ 
-          ?>
-          <label for='seller' class="info1_items"><a href="<?php echo "Seller_profile.php?seller=".$row["account_id"];?>"><?php echo $row["account_name"] ?></a></label>
-    <?php } 
-    } ?>
-
-  </div>
-
- </div>
-
-
-  <content id="prev_next">
-    <a href=" " id="prev" ><< Prev </a> &nbsp;|&nbsp;
-    <a href=" " id="next" >Next >> </a>
-  </content>
-
+  <!-- DONT -->
   </div>  
     <footer>
       <p>A.Y. 2016-2017 Bookshare | &copy;CMSC 128 Lab Sec. 2 |  2016</p>
