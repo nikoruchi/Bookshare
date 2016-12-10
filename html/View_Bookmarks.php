@@ -1,13 +1,12 @@
 	<?php
 		include("connect.php");
+		include("search_book.php");
 		session_start(); 
-
 	$buyer_id = $_SESSION['buyer_id'];
 	$user_query= "SELECT * from account where account_id='$buyer_id'";
     $user_result=mysqli_query($dbconn, $user_query);
     $row_session = mysqli_fetch_assoc($user_result);
     $user_image = $row_session['account_imagepath'];
-
 	?>
 
 <!DOCTYPE html>
@@ -79,10 +78,8 @@
 		<div class=" list_section well well-sm" > 
 
 		<?php
-
 			$select_query = "SELECT * from books join account on books.account_id=account.account_id join bookmarks on bookmarks.book_id=books.book_id WHERE bookmarks.buyer_id='$buyer_id'";
 			$result = mysqli_query($dbconn, $select_query);
-
 			if(mysqli_num_rows($result)>0){
 				while($row=mysqli_fetch_assoc($result)){?>
 
@@ -96,12 +93,12 @@
           			<label id="bookname"><?php echo $row['book_name']?></label>
 					<label id="accname"><?php echo $row['account_name']?></label>
           		</p>
-          		      		
-	      		<form id="proceed"><!-- Authentication will be a nightmare. Probably need PHP sessions or something -->
-					<p><a id="action" style="color:red;" class="btn-link" href="Delete_Bookmark.php?id=<?php echo $row['book_id']?>">Remove</a></p>
-					<!-- cancel link here-->
+          		<div class="proceed">
+	      		<form >
+	      				<a id="action1"  class="btn btn-primary" href="Add_to_Cart.php?id=<?php echo $row['book_id']?>">+Add to Cart</a>
+	      				<a id="action2"  class="btn btn-primary" href="Delete_Bookmark.php?id=<?php echo $row['book_id']?>">Remove</a>
 				</form>
-				
+			</div>
 			</div>
 				<?php
 				}

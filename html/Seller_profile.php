@@ -10,10 +10,8 @@
       $user_result=mysqli_query($dbconn, $user_query);
       $row_session = mysqli_fetch_assoc($user_result);
       $user_image = $row_session['account_imagepath'];
-
       
       $account_id = $_GET['seller'];
-      //$account_id = 1;
       $user_query= "SELECT * from account where account_id='$account_id'";
       $user_result=mysqli_query($dbconn, $user_query);
       $row_session = mysqli_fetch_assoc($user_result);
@@ -25,21 +23,23 @@
       $course = $row_session['course'];
       $query1 ="SELECT * FROM account_contacts where account_id='$account_id'";
       $result1 = mysqli_query($dbconn, $query1);
-      //$rows1 = mysqli_num_rows($result1); 
-      //$row1 = mysqli_fetch_assoc($result1);
-      //$contact_number=$row1['contact_number'];
       $query2 ="SELECT * FROM account_emails where account_id='$account_id'";
       $result2 = mysqli_query($dbconn, $query2);
-      //$rows2 = mysqli_num_rows($result2); 
-      //$row2 = mysqli_fetch_assoc($result2);
-      //$email=$row2['email'];
-
-      // if(isset($_POST['Edit'])){ 
-      
-      // header("Location:edit.php");  
-      // }
-  
     ?>
+<?php 
+   $resultperpage = 5;
+    if(isset($_GET['page'])){
+      $page=$_GET['page'];
+    }else{ 
+      $page=1;
+    }
+    $start_from = ($page-1)*$resultperpage;
+
+  $bookname_shelf = "SELECT * from books as B join account as A on B.account_id=A.account_id WHERE B.account_id='$account_id' order by book_id asc limit $start_from,".$resultperpage;
+  $shelf_result=mysqli_query($dbconn, $bookname_shelf);
+  $numbooks=mysqli_num_rows($shelf_result);
+  $totalpages = ceil($numbooks['$numbooks']);
+?>
 
 <!DOCTYPE html>
 <html class="no-js">
@@ -53,6 +53,7 @@
   <link rel="shortcut icon" href="../images/official_logo.png">
 	<link rel="stylesheet" type="text/css" href="../css/style.css">
   <link rel="stylesheet" type="text/css" href="../css/profile_style.css">
+  <link rel="stylesheet" type="text/css" href="../css/sellerprofile_style.css">
   <script src="../js/jquery.min.js"></script>
   <link rel="stylesheet" type="text/css" href="../css/normalize.css">
   <script src="../js/modal.js"></script>
@@ -84,7 +85,7 @@
             <li class="nav_prof">
             	<div>
             		<a href="Profile.php">
-            			<img src=src="<?php echo $imagepath ?>" title="Profile" alt="Profile" height="40" width="40" id="logo2">
+            			<img src="<?php echo $user_image ?>" title="Profile" alt="Profile" height="40" width="40" id="logo2">
             			<label for="username"><?php echo $_SESSION['username'];?></label>
             		</a>
             	</div>
@@ -145,28 +146,37 @@
       </div>
     </div>
 
-<div class="activity_section">
-  <div class="icon_section">
-      <a href="Public_bookshelf.php?seller=<?php echo $account_id?>" id="bookshelf_section">
-        <div id="image_bookshelf">
-          <img src="../images/bookshelf.png">
-        </div>
-        <div id="label_bookshelf">
-          <img src="../images/label_bookshelf.png">
-        </div>
+<div class="pub_shelf well well-sm">
+    <h2 id="pub_shelf">Bookshelf</h2>
+
+<?php 
+  if($numbooks > 0){ ?>
+<?php
+      while($row = mysqli_fetch_array($shelf_result)){ ;?>
+            <a class="bookshelf_book_container" href="Public_book_info.php?id=<?php echo $row["book_id"];?>" >
+        <content class="bookshelf_book">
+          <img height="225" width="150" class="" alt="<?=$row["book_name"];?>" title="<?=$row["book_name"];?>" src="<?php echo $row['book_imagepath']; ?>">
+        <label>Php<?=$row["book_price"];?></label>
+        </content>
       </a>
-  </div>
-
-
-
-
-<div class="notif_section well well-sm">
-      <h2>Bookshelf</h2>
-
+ <?php  } 
+    } ?>
     
     </div>
-</div>
+  
 
+<content class="shelf_prevnext">
+<?php
+  if($page=='1'){?>
+    <a href=" " id="prev" ><< Prev </a> &nbsp;|&nbsp;
+    <a href="Seller_profile.php?page=<?php echo $page+1;?>&amp;seller=<?php echo $account_id;?>" name="page">Next >></a>
+<?php
+  }else{?>
+    <a href="Seller_profile.php?page=<?php echo $page-1?>&amp;seller=<?php echo $account_id;?>" name="page"><< Prev</a>  &nbsp;|&nbsp;
+    <a href="Seller_profile.php?page=<?php echo $page+1?>&amp;seller=<?php echo $account_id;?>" id="next" name="page">Next >></a>
+ <?php }
+?>
+</content>
 
 
 <!-- DON'T -->

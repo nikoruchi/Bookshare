@@ -9,7 +9,7 @@ $picpath = "user_pic.jpg";
 	<head>
 		<title>Sign-Up!</title>
 		<link rel="shortcut icon" href="../images/official_logo.png">
-		<link rel="stylesheet" type="text/css" href="../css/welcoming2.css">o
+		<link rel="stylesheet" type="text/css" href="../css/welcoming2.css">
 	</head>
 
 <body>
@@ -21,7 +21,7 @@ $picpath = "user_pic.jpg";
 		<div class="edit_user_pic_section">
 			<img id="user_pic" src="../images/<?=$picpath;?>" width="125" height="125" alt="user photo">
 			<label class="fileUpload btn btn-success">    
-            	<span class="upload">Upload</span> 
+            	<span class="upload">Choose File...</span> 
             	<input type="file" name="pic-upload" id="pic-upload" />
           	</label>
 		</div>

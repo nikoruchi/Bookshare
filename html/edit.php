@@ -19,6 +19,8 @@
       $result1 = mysqli_query($dbconn, $query1);
       $query2 ="SELECT * FROM account_emails where account_id='$account_id'";
       $result2 = mysqli_query($dbconn, $query2);
+      $msg=false;
+      $msgc=false;
   
     ?>
 
@@ -38,20 +40,24 @@
         $count = "SELECT * FROM account_emails WHERE account_id='$account_id'";
         $countresult = mysqli_query($dbconn, $count);
         if(mysqli_num_rows($countresult)>2){
-            msg("Can't insert new email. Your email should be less than or equal to 3!");
+            $msg=true;
+            // ("Can't insert new email. Your email should be less than or equal to 3!");
         } else {
           $insert = "INSERT INTO account_emails (account_id, email) VALUES ('$account_id','$emailz')";
           $insertresult = mysqli_query($dbconn, $insert);
+          // $msg=false;
         }
       }
       if($contact!=''){
         $count1 = "SELECT * FROM account_contacts WHERE account_id='$account_id'";
         $countresult1 = mysqli_query($dbconn, $count1);
         if(mysqli_num_rows($countresult1)>2){
-          msg("Can't insert new contact number. Your contact number should be less than or equal to 3!");
+          $msgc=true;
+          // msg("Can't insert new contact number. Your contact number should be less than or equal to 3!");
         } else {
           $insert1 = "INSERT INTO account_contacts (account_id, contact_number) VALUES ('$account_id','$contact')";
           $insertresult1 = mysqli_query($dbconn, $insert1);
+           // $msgc=false;
         }
       }
       if($insertresult1||$insertresult){
@@ -81,9 +87,7 @@
       }
   }
 
-  function msg($mess){?>    
-    <p><?=$mess;?></p>
-    <?php }
+            
 ?> 
 
 <!DOCTYPE html>
@@ -161,13 +165,10 @@
                     <label id="name">Name:</label>
                     <input class="form-control-set" type="text" name="name" value="<?php echo $account_name; ?>">
                     <label id="user">Username:</label>
-                    <input class="form-control-set" type="text" name="user_name" value="<?php echo $user_name; ?>">
-                    <label id="password">Password:</label>
-                    <input class="form-control-set" type="password" name="password" value="<?php echo $password; ?>"> 
+                    <input class="form-control-set" type="text" name="user_name" value="<?php echo $user_name; ?>">                    
                 </content>
                 <content class="col-xs-set">
                     <label id="year">Year:</label>
-                    <!-- <input class="form-control-set" type="text" name="year_level" value="<?php echo  $year_level; ?>"> -->
                     <select name="yearlevel" id="yearlevel" class="form-control-set">     
                       <option value=""> </option>
                       <option value="1st_year"> 1st Year </option>
@@ -183,7 +184,6 @@
                 </content>
                 <content class="col-xs-set">
                     <label id="year">Course:</label>
-                   <!--  <input class="form-control-set" type="text" name="course" value="<?php echo  $course; ?>"> -->
                     <select name="course1" id="course1" class="form-control-set">      
                       <option value="">  </option>
                       <option value="Accountancy"> Accountancy </option>
@@ -210,7 +210,6 @@
                 </content>
                 <content class="col-xs-set" id="edit-btn-container">
                         <input type="submit" name="Save" value="Save" class="btn btn-default">
-                        <!-- <input type="reset" name="Cancel" value="Cancel" class="btn btn-danger" > -->
                         <a href="Settings.php" class="btn btn-danger"> Cancel </a> 
                 </content>
             </form>
@@ -219,6 +218,20 @@
             <div id="contact_set">
                 <h2 id="sections">CONTACT INFORMATION</h2>
             </div>
+            
+            <section id="error">
+            <?php 
+              if($msgc==true){?>    
+                <p>Can't insert new contact number. Your contact numbers should be less than or equal to 3!</p>
+            <?php } 
+              if($msg==true){?>    
+                <p>Can't insert new email. Your email should be less than or equal to 3!</p>
+            <?php } 
+              elseif(!($msg==true)||!($msgc==true)){?>
+                <p><br></p>
+            <?php } ?>
+            </section>
+
             <div class="add_btn_container">
                 <button type="button" class="btn btn-info btn-primary" name="add" data-toggle="modal" data-target="#myModal">+Add</button>
             </div>

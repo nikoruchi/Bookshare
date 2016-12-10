@@ -19,6 +19,7 @@
   			while ($row=mysqli_fetch_assoc($info_result)){ 
  				$Price=$row["book_price"];
  				$Quality=$row["book_quality"];
+ 				$Pages=$row["book_pages"];
  				$Title=$row["book_name"];
  				$Edition=$row["book_edition"];
  				$Authors=$row["book_author"];
@@ -32,8 +33,6 @@
 ?>
 
 <?php
-
-
 	if(isset($_POST['update'])){
 		$price=addslashes($_POST["price"]);
 	 	$title=addslashes($_POST["title"]);
@@ -207,9 +206,11 @@
 	  <div class="info">
 	  	<div id="book_image_container">
 	  		<img id="book_pic_edit" src="<?php echo $book_image;?>" width="200" height="275" />
-	    </div>
+	    
 	    <div class="upload_image_container">	
 	  		<img src="../images/upload_image.png" title="Upload Image" alt="Upload Image" width="200" height="275" class="upload_image_icon" data-toggle="modal" data-target="#myModal9">
+	  	</div>
+
 	  	</div>
 
 		<div class="book_info1">
@@ -244,32 +245,9 @@
 			   	<option value="Statistics"> Statistics </option>
 			</select>
 
-			<!-- gina-try ko i selected ang course category nya gd. Please, wag lng idelete. -->
- 			<!-- <select name="category" id="category" >			
-			   	<option value=" "> -- </option>
-			   	<option value="Accountancy" selected="<?php if("Accountancy"==$Category){ echo $Category;}?>"> Accountancy </option>
-			   	<option value="Applied Mathematics" selected="<?php if("Applied Mathematics"==$Category){ echo $Category;}?>"> Applied Mathematics </option>			   	
-			   	<option value="Biology" selected="<?php if("Biology"==$Category){ echo $Category;}?>"> Biology </option>
-			   	<option value="Business Administration" selected="<?php if("Business Administration"==$Category){ echo $Category;}?>"> Business Administration </option>
-			   	<option value="Chemical Engineering" selected="<?php if("Chemical Engineering"==$Category){ echo $Category;}?>"> Chemical Engineering </option>
-			   	<option value="Chemistry" selected="<?php if("Chemistry"==$Category){ echo $Category;}?>"> Chemistry </option>
-			   	<option value="Communication And Media Studies" selected="<?php if("Communication And Media Studies"==$Category){ echo $Category;}?>"> Communication and Media Studies </option>
-			   	<option value="Community Development" selected="<?php if("Community Development"==$Category){ echo $Category;}?>"> Community Development </option>
-			   	<option value="Computer Science" selected="<?php if("Computer Science"==$Category){ echo $Category;}?>"> Computer Science </option>
-			   	<option value="Economics" selected="<?php if("Economics"==$Category){ echo $Category;}?>"> Economics </option>
-			   	<option value="Fisheries" selected="<?php if("Fisheries"==$Category){ echo $Category;}?>"> Fisheries </option>
-			   	<option value="Food Technology" selected="<?php if("Food Technology"==$Category){ echo $Category;}?>"> Food Technology </option>
-			   	<option value="History" selected="<?php if("History"==$Category){ echo $Category;}?>"> History </option>
-			   	<option value="Literature" selected="<?php if($Category=="Literature"){ echo $Category;}?>"> Literature </option>
-			   	<option value="Management" selected="<?php if("Management"==$Category){ echo $Category;}?>"> Management </option>
-			   	<option value="Political Science" selected="<?php if("Political Science"==$Category){ echo $Category;}?>"> Political Science </option>
-			   	<option value="Psychology" selected="<?php if("Psychology"==$Category){ echo $Category;}?>"> Psychology </option>
-			   	<option value="Public Health" selected="<?php if("Public Health"==$Category){ echo $Category;}?>"> Public Health </option>
-			   	<option value="Sociology" selected="<?php if("Sociology"==$Category){ echo $Category;}?>"> Sociology </option>
-			   	<option value="Statistics" selected="<?php if("Statistics"==$Category){ echo $Category;}?>"> Statistics </option>
-			</select> -->
+			
  		</div>
-		<div class="book_info2">
+		<div class="book_info2e">
 			<content class="col-xs-10">
 				<label for='title' id="info_label">Title: </label>
 				<input type="text" name="title" class="form-control" placeholder="Title of the Book" value="<?php echo $Title ?>">
@@ -277,6 +255,14 @@
 			<content class="col-xs-2">
 				<label for='edition' id="info_label">Edition: </label>
 				<input type="text" name="edition" class="form-control" placeholder="1st, 2nd, etc." value="<?php echo $Edition ?>">
+			</content>
+			<content class=" extra_details col-xs-2">
+				<label id="info_label" for='quality'>Quality: </label>
+				<input type="text" name="quality" class="form-control" value="<?php echo $Quality ?>" placeholder="0-100%">
+			</content>
+			<content class=" extra_details col-xs-4">
+				<label  id="info_label" for='quality'>Pages: </label>
+				<input type="text" name="price" class="form-control" value="<?php echo $Pages ?>" placeholder="# of pages">
 			</content>
 			<content class="col-xs-10">
 				<label for='author' id="info_label" >Author/s: </label>
@@ -308,7 +294,7 @@
           <h4 class="modal-title">Change Your Book's Photo</h4>
         </div>
         <div class="modal-body">
-          <div class="edit_user_pic_section">
+          <div class="edit_user_pic_sectiona">
             <img id="book_pic" src="<?php echo $book_image;?>" width="200" height="275" alt="user photo" >
           </div>
           <label class="fileUpload btn btn-success">    

@@ -14,52 +14,7 @@
     $prompt='';
     $prompt2='';
 
-  //   if(isset($_POST['save_pic'])){
-
-  //   	if(empty(basename($_FILES["pic-upload"]["name"]))){
-  // 			$prompt2= "Please Select Image File.";
-  // 		} else {
-  // 			$target_dir = "../uploads/";
-		// 	$target_file = $target_dir . basename($_FILES["pic-upload"]["name"]);
-		// 	$uploadOk = 1;
-		// 	$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-  		
-
-		// 	$check = getimagesize($_FILES["pic-upload"]["tmp_name"]);
-		// 	if($check == false) {
-		// 	    echo "File is not an image.";
-		// 	    $uploadOk = 0;
-		// 	}
-			
-
-		// 	// Check if file already exists
-		// 	if (file_exists($target_file)) {
-		// 	    echo "Sorry, file already exists.";
-		// 	    $uploadOk = 0;
-		// 	}
-
-		// 	// Check file size
-		// 	if ($_FILES["pic-upload"]["size"] > 500000) {
-		// 	    echo "Sorry, your file is too large.";
-		// 	    $uploadOk = 0;
-		// 	}
-
-		// 	// Allow certain file formats
-		// 	if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
-		// 	    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-		// 	    $uploadOk = 0;
-		// 	}
-
-		// 	if(move_uploaded_file($_FILES["pic-upload"]["tmp_name"], $target_file)){
-	 //        	$sql = "UPDATE books SET book_imagepath='$target_file' WHERE book_id='$book_id_val'";
-		//         $add_image = mysqli_query($dbconn, $sql); 
-		//        	if($add_image){
-		//             header("Location: Book_info.php?id=$book_id_val");
-		//         }	        			
-	 //        }
-		// }
-  //   }
-
+  
 	if(isset($_POST['add'])){
 	 	$price=$_POST["price"];
  		$title=addslashes($_POST["title"]);
@@ -189,9 +144,6 @@
 	  	<div id="book_image_container">
 	  		<img id="book_pic_edit" src="../images/default.jpg" width="200" height="275" />
 	    </div>
-	    <!-- <div class="upload_image_container">	
-	  		<img src="../images/upload_image.png" title="Upload Image" alt="Upload Image" class="upload_image_icon" data-toggle="modal" data-target="#myModal9">
-	  	</div> -->
 
 		<div class="book_info1">
 			<content class="col-xs-4" id='price'>
@@ -225,7 +177,7 @@
 			   	<option value="Statistics"> Statistics </option>
 			</select>
  		</div>
-		<div class="book_info2">
+		<div class="book_info2e">
 			<content class="col-xs-10">
 				<label for='title' id="info_label">Title: </label>
 				<input type="text" name="title" class="form-control" placeholder="Title of the Book" >
@@ -233,6 +185,14 @@
 			<content class="col-xs-2">
 				<label for='edition' id="info_label">Edition: </label>
 				<input type="text" name="edition" class="form-control" placeholder="1st, 2nd, etc.">
+			</content>
+			<content class=" extra_details col-xs-2">
+				<label id="info_label" for='quality'>Quality: </label>
+				<input type="text" name="quality" class="form-control" placeholder="0-100%">
+			</content>
+			<content class=" extra_details col-xs-4">
+				<label  id="info_label" for='quality'>Pages: </label>
+				<input type="text" name="price" class="form-control" placeholder="# of pages">
 			</content>
 			<content class="col-xs-10">
 				<label for='author' id="info_label" >Author/s: </label>

@@ -110,8 +110,7 @@
 
 	 		if (isset($_GET['ID'])) {
 				$course=$_GET['ID'];
-			}
-			else {
+			} else {
 				$course="Bookshare Library";
 			}
 
@@ -129,14 +128,14 @@
 			$result = mysqli_query($dbconn,$query);
 			if((mysqli_num_rows($result))>0){ 
 				while(list($info_id,$book_id,$book_subject, $book_pages,$book_quality,$book_author,$book_details)=mysqli_fetch_row($result)){
-					$que = "SELECT * FROM books WHERE book_id = '$book_id'";
+					$que = "SELECT * FROM books WHERE books.book_id = '$book_id' AND books.book_id NOT IN (SELECT cart.book_id FROM cart)";
 					$res = mysqli_query($dbconn,$que);
 					if(mysqli_num_rows($res)>0){
 						while(list($book_id,$account_id,$book_name,$book_edition,$book_price,$book_desc,$book_imagepath)=mysqli_fetch_row($res)){?>
 							<a class="bookshelf_book_container" href="<?php if($account_id==$buyer_id){echo "Book_info.php?id=".$book_id;}else{ echo "Public_book_info.php?id=".$book_id;}?>" >
 								<content class="bookshelf_book">
 									<img height="225" width="150" class="" alt="<?=$book_name;?>" title="<?=$book_name?>" src="<?php echo $book_imagepath; ?>">
-									<label>Php<?=$book_price;?><br><?=$book_name?></label>
+									<label>Php<?=$book_price;?></label>
 								</content>
 							</a>
 	<?php 				}
@@ -148,7 +147,7 @@
 
 			$start_from = ($page-1)*$resultperpage;
 		
-			$query="SELECT * FROM books order by book_id asc limit $start_from,".$resultperpage; 
+			$query="SELECT * FROM books WHERE books.book_id NOT IN (SELECT cart.book_id FROM cart) order by book_id asc limit $start_from,".$resultperpage; 
 			$result = mysqli_query($dbconn,$query);
 			$numresult = mysqli_num_rows($result);
 			if(mysqli_num_rows($result)>0) { 
@@ -156,7 +155,7 @@
 					<a class="bookshelf_book_container" href="<?php if($account_id==$buyer_id){echo "Book_info.php?id=".$book_id;}else{ echo "Public_book_info.php?id=".$book_id;}?>">
 						<content class="bookshelf_book">
 							<img height="225" width="150" class="" alt="<?=$book_name;?>" title="<?=$book_name?>" src="<?php echo $book_imagepath; ?>">
-							<label>Php<?=$row["book_price"];?><br><?=$row["book_name"];?></label>
+							<label>Php<?=$book_price;?></label>
 						</content>
 					</a>
 	<?php 		} 

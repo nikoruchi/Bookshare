@@ -23,6 +23,7 @@
   	while ($row=mysqli_fetch_assoc($info_result)){ 
  		$Price=$row["book_price"];
  		$Quality=$row["book_quality"];
+ 		$Pages=$row["book_pages"];
  		$Title=$row["book_name"];
  		$Edition=$row["book_edition"];
  		$Authors=$row["book_author"];
@@ -140,6 +141,14 @@
 		<div class="book_info1a">
  			<label for="category" id="book_info1a_label"> Course Category: </label>
 			<label for='category' class="info1_items"><?php echo $Category ?></label>
+			<content id="extra_details">
+				<label id="book_info1a_label" for='quality'>Quality: </label>
+				<p><?php echo $Quality ?></p>
+			</content>
+			<content id="extra_details">
+				<label id="book_info1a_label" for='pages'>No. of Pages: </label>
+				<label><?php echo $Pages ?></label> 
+			</content>
 		</div>
 		<div id="book_info2">
 			<label for='title' id="info_label_title"> 

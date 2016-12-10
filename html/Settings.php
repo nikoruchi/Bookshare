@@ -1,8 +1,8 @@
 <?php
-	include("connect.php");
-	include("search_book.php");
+  include("connect.php");
+  include("search_book.php");
   session_start();
-	?>
+  ?>
 <?php
     
       
@@ -24,41 +24,107 @@
   
     ?>
 
-<?php 
 
+
+
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="CMSC 128 Lab Sec. 2">
+  <meta name="description" content="Sell, buy, and trade books with your schoolmates.">
+  <meta name="keywords" content="Book, Books, Trade Book, Sell Book, Buy Book">
+  <title> Account Settings </title>
+
+  <link rel="shortcut icon" href="../images/official_logo.png">
+  <link rel="stylesheet" type="text/css" href="../css/style.css">
+  <link rel="stylesheet" type="text/css" href="../css/stylesettings.css">
+  <script src="../js/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../css/normalize.css">
+  <script src="../js/modal.js"></script>
+  <script src="../js/custom-file-input.js"></script>
+  <script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
+
+</head>
+<body>
+  <div class="wrapper" id="page-wrap">
+  <header>
+    <nav>
+      <ul>
+            <li class="nav_lib">
+              <div>
+                <a href="Library.php">
+                  <img src="../images/official_logo.png" title="Library" alt="Library" height="50" width="50" id="logo">
+                  <label for="library" id="logolabel">Library</label>
+                </a>
+              </div>
+            </li>
+            <li class="nav_srch">
+              <span class="col-xs-4">             
+                <form method="post" action = "<?php $_PHP_SELF; ?>">
+            <input type="search" name="search" placeholder="Search..." class="form-control-srch" id="noborder">
+            <input type="submit" name="submit" value="GO" class="btn btn-success">
+          </form>
+        </span>
+            </li>
+            <li class="nav_prof">
+              <div>
+                <a href="Profile.php">
+                  <img src="<?php echo $user_image;?>" title="Profile" alt="Profile" height="40" width="40" id="logo2">
+                  <label for="username"><?php echo $_SESSION['username'];?></label>
+                </a>
+              </div>
+            </li>
+            <li class="nav_set">
+              <div>
+                <label for="settings">
+                  <a href="Settings.php">Settings</a> |
+                </label>
+              </div>
+            </li>
+            <li class="nav_log">
+              <div>
+              <a href="index.php">
+                <label for="logout" id="logout">Log-out</label>
+              </a>
+              </div>
+            </li>
+          </ul>
+    </nav>
+  </header>
+
+  <div class="container" id="main-content">
+      <a href="Settings.php"><h1 id="bookshelf">Account Settings</h1></a>
+
+
+<section id="error">
+        <?php 
     if(isset($_POST['save_pic'])){
       $target_dir = "../uploads/";
       $target_file = $target_dir . basename($_FILES["pic-upload"]["name"]);
       $uploadOk = 1;
       $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-
       // Check if image file is a actual image or fake image
-
           $check = getimagesize($_FILES["pic-upload"]["tmp_name"]);
           if($check == false) {
               msg("File is not an image.");
               $uploadOk = 0;
           }
-
-
       // Check if file already exists
       if (file_exists($target_file)) {
           msg("Sorry, file already exists.");
           $uploadOk = 0;
       }
-
       // Check file size
       if ($_FILES["pic-upload"]["size"] > 500000) {
           msg("Sorry, your file is too large.");
           $uploadOk = 0;
       }
-
       // Allow certain file formats
       if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
           msg("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
           $uploadOk = 0;
       }
-
       // Check if $uploadOk is set to 0 by an error
       if ($uploadOk == 0) {
           msg("Sorry, your file was not uploaded.");
@@ -66,7 +132,6 @@
       } else {
           if (move_uploaded_file($_FILES["pic-upload"]["tmp_name"], $target_file)) {
              // echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
-
               $sql = "UPDATE account SET account_imagepath='$target_file' WHERE account_id='$account_id'";
               $add_image= mysqli_query($dbconn, $sql); 
               if($add_image){
@@ -77,83 +142,46 @@
           }
       }
     }
-
+    if(isset($_POST['save_pass'])){
+      $oldpass=$_POST['oldpass'];
+      $newpass=$_POST['newpass'];
+      $repass =$_POST['repass'];
+      if($repass==''||$newpass==''||$oldpass==''){
+          msg("Current password, new password, and password retype confirmation must be filled out to make changes to your current password.");
+      } else {
+        $sql = "SELECT * FROM account WHERE account_id='$account_id' AND password=MD5('$oldpass')";
+        $check = mysqli_query($dbconn,$sql);
+        if(mysqli_num_rows($check)==0){
+            msg("Sorry, that’s not your current password!");
+        }
+        if($repass!=$newpass){
+            msg("Oops, new password and confirmation don’t match!");
+        }
+        if((strlen($newpass)<6)||(countDigits($newpass)<1)||(strlen($repass)<6)||(countDigits($repass)<1)){
+            msg("New password must at least be 6 characters long and should contain at least 1 integer.");
+        }
+        if(mysqli_num_rows($check)>0&&$repass==$newpass&&(strlen($newpass)>6)&&(countDigits($newpass)>1)){
+          $change = "UPDATE account SET password=MD5('$newpass') WHERE account_id='$account_id'";
+          $change1 = mysqli_query($dbconn,$change);
+          if($change1){
+             header("Refresh:0");
+             msg("Password changed");
+          } else {
+              msg("Error while changing password.");
+          }
+        }
+      }
+    }
+    function countDigits( $str ) {
+      return preg_match_all( "/[0-9]/", $str );
+    }
     function msg($mess){?>    
     <p><?=$mess;?></p>
     <?php }
-
 ?>
+</section>
 
-
-
-<!DOCTYPE html>
-<html class="no-js">
-<head>
-	<meta charset="utf-8">
-	<meta name="author" content="CMSC 128 Lab Sec. 2">
-	<meta name="description" content="Sell, buy, and trade books with your schoolmates.">
-	<meta name="keywords" content="Book, Books, Trade Book, Sell Book, Buy Book">
-	<title> Account Settings </title>
-
-  <link rel="shortcut icon" href="../images/official_logo.png">
-	<link rel="stylesheet" type="text/css" href="../css/style.css">
-  <link rel="stylesheet" type="text/css" href="../css/stylesettings.css">
-  <script src="../js/jquery.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="../css/normalize.css">
-  <script src="../js/modal.js"></script>
-  <script src="../js/custom-file-input.js"></script>
-  <script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
-
-</head>
-<body>
-	<div class="wrapper">
-	<header>
-		<nav>
-			<ul>
-            <li class="nav_lib">
-            	<div>
-           			<a href="Library.php">
-           				<img src="../images/official_logo.png" title="Library" alt="Library" height="50" width="50" id="logo">
-           				<label for="library" id="logolabel">Library</label>
-           			</a>
-           		</div>
-            </li>
-            <li class="nav_srch">
-            	<span class="col-xs-4">            	
-            		<form method="post" action = "<?php $_PHP_SELF; ?>">
-						<input type="search" name="search" placeholder="Search..." class="form-control-srch" id="noborder">
-						<input type="submit" name="submit" value="GO" class="btn btn-success">
-					</form>
-				</span>
-            </li>
-            <li class="nav_prof">
-            	<div>
-                <a href="Profile.php">
-                  <img src="<?php echo $user_image;?>" title="Profile" alt="Profile" height="40" width="40" id="logo2">
-                  <label for="username"><?php echo $_SESSION['username'];?></label>
-                </a>
-              </div>
-            </li>
-            <li class="nav_set">
-            	<div>
-            		<label for="settings">
-            			<a href="Settings.php">Settings</a> |
-            		</label>
-            	</div>
-            </li>
-           	<li class="nav_log">
-           		<div>
-           		<a href="index.php">
-           			<label for="logout" id="logout">Log-out</label>
-           		</a>
-           		</div>
-           	</li>
-        	</ul>
-		</nav>
-	</header>
-	<div class="container">
-			<a href="Settings.php"><h1 id="bookshelf">Account Settings</h1></a>
-	  <div class="set_section well well-sm">
+    <div class="set_section well well-sm" id="guts">
 
       <div class="dropdown_menu">
         <div class="edit_container">
@@ -161,6 +189,7 @@
         </div>
         <div id="edit_dropdown" class="edit_dropdown_content">
             <a  data-toggle="modal" data-target="#myModal5">Change Photo</a>
+            <a  data-toggle="modal" data-target="#myModal5A">Change Password</a>
             <a href="edit.php">Edit Account</a>
         </div>
      </div>
@@ -238,7 +267,7 @@
             <img id="user_pic_edit" src="<?php echo $user_image;?>"  alt="user photo" >
           </div>
           <label class="fileUpload btn btn-success">    
-            <span>Upload</span> 
+            <span>Choose File...</span> 
             <input type="file" name="pic-upload" id="pic-upload" class="upload" />
           </label>
         </div>
@@ -251,12 +280,41 @@
     </div>
   </div>
 
+<!-- CHANGE PASSWORD MODAL -->
+<div class="modal fade" id="myModal5A" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+      <form method="post" action="<?php $_PHP_SELF; ?>">
+        <div class="modal-header">
+          <h4 class="modal-title">Change Your Password</h4>
+        </div>
+        <div class="modal-body">
+          <content class="col-xs-set password">
+              <label id="oldpass">Old Password:</label>
+              <input class="form-control-set" type="password" name="oldpass"> 
+              <label id="newpass">New Password:</label>
+              <input class="form-control-set" type="password" name="newpass"> 
+              <label id="repass">Re-type Password:</label>
+              <input class="form-control-set" type="password" name="repass"> 
+          </content>
+        </div>
+        <div class="modal-footer">
+        <input type="submit" value="UPDATE" name="save_pass" class="btn btn-default">
+        <input type="submit" value="CANCEL" class="btn btn-danger">
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 <!-- DON'T -->
     </div>
-		<footer>
-			<p>A.Y. 2016-2017 Bookshare | &copy;CMSC 128 Lab Sec. 2 |  2016</p>
-		</footer>
-	</div>
+    <footer>
+      <p>A.Y. 2016-2017 Bookshare | &copy;CMSC 128 Lab Sec. 2 |  2016</p>
+    </footer>
+  </div>
 
 
 </body>
@@ -268,11 +326,9 @@
 function edit_menu() {
     document.getElementById("edit_dropdown").classList.toggle("show");
 }
-
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = function(event) {
   if (!event.target.matches('.edit_btn')) {
-
     var dropdowns = document.getElementsByClassName("edit_dropdown_content");
     var i;
     for (i = 0; i < dropdowns.length; i++) {
@@ -283,5 +339,4 @@ window.onclick = function(event) {
     }
   }
 }
-
 </script>

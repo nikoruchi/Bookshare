@@ -25,13 +25,15 @@
 					$bedition = $row['book_edition'];
 					$bprice = $row['book_price'];
 					$bdesc = $row['book_desc'];
+					$bpages = $row['book_pages'];
+					$bquality = $row['book_quality'];
 					$seller = $row['account_id'];
 					$category = $row['book_subject'];
 					$imagepath = $row['book_imagepath'];
 				}
 			}
 	} else{
-		msg("cant display book_info.");
+		header("Location:Library.php");
 	}
 
 	$seller1="SELECT * FROM account WHERE account_id='$seller'";
@@ -45,19 +47,31 @@
 		$sqlresult = mysqli_query($dbconn,$sql);
 		if($sqlresult){
 			header("Location:Shopping_list.php");
-		} else {
-			msg("unable to add book.");
-		}
+		} else { ?>
+			<script>
+				function myfuction(){
+					alert("Can't add book to the cart.");
+				}
+			</script>
+<?php	}
+		 
 	}
 
-
-	if(isset($_POST['unbookmark'])){
-		
+	if(isset($_POST['remove_from_cart'])){
+		$sql = "DELETE FROM cart WHERE book_id = '$id'";
+		$sqlresult = mysqli_query($dbconn,$sql);
+		if($sqlresult){
+			header("Refresh:0");
+		} else { ?>
+			<script>
+				function myfuction(){
+					alert("Can't remove book from the cart.");
+				}
+			</script>
+<?php	}
+		 
 	}
 
-  function msg($mess){?>    
-    <p><?=$mess;?></p>
-    <?php }
 ?> 
 
 <!DOCTYPE html>
@@ -148,6 +162,14 @@
 		<div class="book_info1a">
  			<label for="category" id="book_info1a_label"> Course Category: </label>
 			<label for='category' class="info1_items"><?php echo $category ?></label>
+			<content id="extra_details">
+				<label id="book_info1a_label" for='quality'>Quality: </label>
+				<p><?php echo $bquality ?></p>
+			</content>
+			<content id="extra_details">
+				<label id="book_info1a_label" for='pages'>No. of Pages: </label>
+				<label><?php echo $bpages ?></label> 
+			</content>
 			<label for="seller" id="book_info1a_label"> Seller: </label>
 			<label for='seller' class="info1_items"><a href="<?php if($buyer_id!=$seller){echo "Seller_profile.php?seller=".$seller;}else{echo "Profile.php?id=".$buyer_id;
 				}?>"><?php echo $sellername ?></a></label>
@@ -173,7 +195,14 @@
 
 	  <div class="add_cart">
 	  	<form action="<?php $_PHP_SELF; ?>" method="post">
-			<input type="submit" name="add_to_cart" value="+ Add to Cart" class="btn btn-primary">
+	  	<?php
+	  		$sqlee = "SELECT * FROM cart WHERE seller_id='$seller' AND book_id='$id' AND buyer_id='$buyer_id'";
+			$sqle = mysqli_query($dbconn,$sqlee);
+			if(mysqli_num_rows($sqle)==0) { ?>
+				<button name="add_to_cart"  class="btn btn-primary">+Add to Cart</button> 
+	<?php	} else {	  	?>
+				<button name="remove_from_cart" class="btn btn-danger" style="margin-left: -25px">-Remove from Cart</button>
+	<?php	} ?>
 		</form>
 	  </div>
 
