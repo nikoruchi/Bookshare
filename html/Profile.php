@@ -152,11 +152,10 @@
     <!-- PHP NI DIRI -->
 
     <?php  
-            $transaction_buyer; $transaction_seller; $transaction_date; $prev_buyer_id=""; $prev_seller_id=""; $prev_date="";
+            $transaction_buyer; $transaction_seller; $transaction_date; $prev_buyer_id=""; $prev_seller_id=""; $prev_date=""; $total=0;
     
               
-              $activity = "SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`)))) 
-              as transactions where  seller_id = '$account_id' or buyer_id = '$account_id' order by date desc, seller";
+              $activity = "SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer`,`cart`.`status` AS `status` from ((((select * from cart where status='bought')`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`)))) transaction where seller_id = '$account_id' or buyer_id = '$account_id' order by date desc, seller";
               $activity_result = mysqli_query($dbconn, $activity);
               
      while($activity_row = mysqli_fetch_assoc($activity_result)){
@@ -166,12 +165,10 @@
               $transaction_date= $activity_row['date'];
               $transaction_buyer = $activity_row['buyer'];
               $transaction_seller= $activity_row['seller'];
-              if($transaction_buyer_id != $prev_buyer_id || $transaction_seller_id != $prev_seller_id && $transaction_date != $prev_date){
-              $user_buyer = "SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) 
-              as transactions where buyer_id  = '$transaction_buyer_id' and date='$transaction_date'";
+              if($transaction_buyer_id != $prev_buyer_id || $transaction_seller_id != $prev_seller_id || $transaction_date != $prev_date){
+              $user_buyer = "SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer`,`cart`.`status` AS `status` from ((((select * from cart where status='bought')`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`)))) transaction where status='bought' and buyer_id  = '$transaction_buyer_id' and date='$transaction_date'";
              
-              $user_seller = "SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) 
-              as transactions where seller_id = '$transaction_seller_id' and date='$transaction_date'";
+              $user_seller = "SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer`,`cart`.`status` AS `status` from ((((select * from cart where status='bought')`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`)))) transaction where status='bought' and seller_id = '$transaction_seller_id' and date='$transaction_date'";
               $user_buyer_result = mysqli_query($dbconn, $user_buyer);
               $user_seller_result = mysqli_query($dbconn, $user_seller);
               $fetch_row;
@@ -183,14 +180,17 @@
           ?>
 
           <?php
+            $transaction_person_id ="";
                           $user_is_buyer=0; $transaction_person;
                               if($account_id == $transaction_seller_id){
                                 $transaction_person = $transaction_buyer;
                                 $user_is_buyer = 1;
+                                $transaction_person_id = $transaction_buyer_id;
                            }
                               else if ($account_id == $transaction_buyer_id){
                                   $transaction_person = $transaction_seller;
                                   $user_is_buyer = 0;
+                                  $transaction_person_id = $transaction_seller_id;
                                 
                               }
             ?>
@@ -198,34 +198,27 @@
           <?php
                       $query; $query_result; $message;
                     if($user_is_buyer == 0){
-                      $query = "SELECT message_details from message_content where message_id=1";
-                      $query_result = mysqli_query($dbconn, $query);
-                      while($fetch_row = mysqli_fetch_assoc($query_result)){
-                          $message = $fetch_row['message_details'];
-                        }}
-            else{
-                      $counter = 1;
-                      $query = "SELECT message_details from message_content where message_id=2";
-                      $query_result = mysqli_query($dbconn, $query);
-                      while($fetch_row = mysqli_fetch_assoc($query_result)){
-                          $message = $fetch_row['message_details'];
+                          $message = "Book(s) you bought from ";
                         }
-                      $records = ("SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) 
-                        as transactions where seller_id = '$account_id'" );
-                      $records_result = mysqli_query($dbconn, $records);
+            else{
+                          $message = "Book(s) you sold to ";
                      ?>
+          <?php } 
 
-                 <?php } ?>
+          $sql = "SELECT account_imagepath as path from account where account_id='$transaction_person_id' limit 1";
+          $result = mysqli_query($dbconn, $sql);
+          $row = mysqli_fetch_assoc($result);
+
+                 ?>
 
       <div class="log_content">
-          <img src="../images/user_pic.jpg" id="user_pic2">
-          <p id="act_content"><?= $message; ?><strong><?php echo $transaction_person;?></strong><br> 
+          <img src="<?php echo $row["path"] ?>" id="user_pic2" title="<?php echo $transaction_person;?>">
+          <p id="act_content"><?= $message; ?><strong><a href="<?php echo "Seller_profile.php?seller=".$transaction_person_id;?>"><?php echo $transaction_person;?></a>.</strong><br> 
            </p>
           <div id="act_date"><?php echo $transaction_date?></div>
       
 <?php                       
-        $records = ("SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer` from (((`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`))) ) as transactions
-                        where seller_id = '$transaction_seller_id' and date = '$transaction_date' order by book_name" );
+        $records = "SELECT * from (select `cart`.`seller_id` AS `seller_id`,`seller`.`account_name` AS `seller`,`cart`.`book_id` AS `book_id`,`cart`.`date` AS `date`,`books`.`book_name` AS `book_name`,`books`.`book_price` AS `book_price`,`cart`.`buyer_id` AS `buyer_id`,`buyer`.`account_name` AS `buyer`,`cart`.`status` AS `status` from ((((select * from cart where status='bought')`cart` join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `seller` on((`seller`.`account_id` = `cart`.`seller_id`))) join (select `account`.`account_id` AS `account_id`,`account`.`account_name` AS `account_name` from `account`) `buyer` on((`buyer`.`account_id` = `cart`.`buyer_id`))) join (select `books`.`book_name` AS `book_name`,`books`.`book_id` AS `book_id`,`books`.`book_price` AS `book_price` from `books`) `books` on((`cart`.`book_id` = `books`.`book_id`)))) transaction where status='bought' and seller_id = '$transaction_seller_id' and buyer_id = '$transaction_buyer_id'and date = '$transaction_date' order by book_name";
         $records_result = mysqli_query($dbconn, $records);?>
 
   <div class="box">
@@ -238,15 +231,17 @@
         <th>Book</th>
         <th>Price</th>
       </tr>
-        <?php while($records_row = mysqli_fetch_assoc($records_result)) {?>
+        <?php
+         while($records_row = mysqli_fetch_assoc($records_result)) {?>
         <tr>
-          <td><a href="Book_info.php?id=<?php echo $row["book_id"];?>"><?php echo $records_row['book_name'];?></a></td>
+          <td><a href="<?php echo "Book_info.php?id=".$records_row["book_id"];?>"><?php echo $records_row['book_name'];?></a></td>
           <td>Php<?php echo $records_row['book_price'];?></td>
-        <?php } ?> 
+          <?php $total += $records_row["book_price"];?>
+        <?php }?> 
         </tr>
         <tr >
           <td id=total>Total:</td>
-          <td id=total><?= '0000' ?>
+          <td id=total>Php<?= $total; $total =0; ?>
         </tr>
       </table> 
     </div>
