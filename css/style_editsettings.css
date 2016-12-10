@@ -1,3 +1,4 @@
+
 /*CONTAINERS*/
 .edit_set_section{
   width: 700px;
@@ -15,7 +16,7 @@
   display: block;
 }
 #edit_data2{
-  margin-top: 269px;
+  margin-top: 259px;
   width: 500px;
   margin-left: 100px;
   padding-bottom: 20px;
@@ -48,6 +49,9 @@
 }
 
 /*CUSTOM EDITS*/
+#year{
+  padding-top: 10px;
+}
 .add_btn_container a{
   font-size: 18px;
 }

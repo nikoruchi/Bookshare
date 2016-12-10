@@ -62,9 +62,20 @@
 #contact_section label{
 	font-weight: 700;
 }
-#image_bookshelf img, #label_bookshelf img{
+ #cart,#bookmark, #image_bookshelf img, #label_bookshelf img{
 	width: 60px;
 	height: 60px;	
+}
+#bookmark{
+	transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+	margin-left: 680px;
+}
+#cart:hover, #bookmark:hover{
+	transform: scale(1.15, 1.15);
+}
+#cart{
+	transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+	margin-left: -135px;
 }
 #label_bookshelf{
 	margin-top: -54px;
@@ -76,6 +87,7 @@
 	height: 40px;
 	background-color: rgba(0,0,0,0.5);
 }
+
 #image_bookshelf img{
 	position: relative;
 }
@@ -103,9 +115,14 @@
 	height: 90px;
 	margin-bottom: 10px;
 }
+.log_content:hover{
+	border: 2px solid rgba(120,66,55,0.6);
+	transition: 0.3s;
+}
 #act_content{
-	font-size: 20px;
+	font-size: 18px;
 	margin: -70px 90px;
+	display: block;
 }
 #user_pic2{
 	width: 70px;
@@ -114,8 +131,47 @@
 }
 #act_date{
     color: gray;
-    font-size: 15px;
+    font-size: 10px;
     float: right;
     margin-right: 10px;
-    margin-top: 27px;
+    margin-top: 30px;
+}
+table{
+	margin-left: 70px;
+	padding: 10px;
+}
+
+/*TOGGLES*/
+.box{
+	margin-left: 90px;
+	margin-top: 73px;
+}
+.bottom{
+	border: 3px solid rgba(120,66,55,0.6);
+	position: relative;
+	background-color: white;
+	width: 60%;
+	padding: 20px;
+	border-radius: 5px;
+	font-size: 20px;
+	top: -180px;
+	left: 100px;
+}
+.box .bottom{
+	display: none;
+}
+.bottom td{
+	padding-top: 10px;
+}
+.bottom tr{
+	text-align: left;
+}
+.bottom tr a{
+	padding-right: 20px;
+}
+.bottom th{
+	padding-bottom: 5px;
+}
+#total{
+	border-top: 2px solid rgba(120,66,55,0.6);
 }

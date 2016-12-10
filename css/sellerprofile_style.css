@@ -1,60 +1,20 @@
 /*CONTAINERS*/
-.profile_header{
-	align-content: center;
-}
-#profile_side{
-	margin-top: 20px;
-	font-family: 'Raleway Light';
-	text-align: center;
-}
-#prof_name{
-	width: auto;
-	padding:2px;
-}
-#contact_section{
-	margin-top: 20px;
-	padding-top: 6px;
-	font-size: 20px;
-}
-#bookshelf_section{
-	margin-top: -582px;
-    margin-left: 700px;
-    float: right;
-    height: 60px;
-}
-#aside{
-	font-family: 'Raleway Light';
-	text-align: center;
-}
-#yrlvl_course{
-	font-family: 'Raleway Light';
-	font-size: 18px;
-	margin-top: -22px;
-}
 
+.pub_shelf{
+	width: 779px;
+	margin-left:93px;
+	margin-top: 20px;
+	padding: 0 15px 10px 15px;
+	font-family: 'Microsoft Yi Baiti';
+}
 /*CUSTOMS*/
-#user_pic{
-	width: 220px;
-	height: 220px;
-}
-#multi_inputs{
-	display: block;
-	padding-left: 10px;
-}
-#accountname{
-	font-size: 30px;
-	font-family: 'Raleway Medium';
-	font-weight: 700;
-	padding: 2px;
-}
-#username{
-	margin-top: -7px;
-	color: rgba(0,0,0,0.6);
-	padding-left: 4px;
-	font-size: 20px;
-}
-#contact_section label{
-	font-weight: 700;
+#pub_shelf{
+	font-family: 'GiovanniITCTT';
+	letter-spacing: 2px; 
+	font-size: 40px;
+	text-align: center;
+	padding-bottom: 0;
+	color: #56372E;
 }
 #image_bookshelf img, #label_bookshelf img{
 	width: 60px;
@@ -78,4 +38,8 @@
 }
 #course{
 	font-family: 'Raleway Medium';
+}
+.shelf_prevnext{
+	margin-left: 760px;
+  	font-family: 'Microsoft Yi Baiti';
 }
