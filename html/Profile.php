@@ -181,6 +181,7 @@
               $user_buyer_result = mysqli_query($dbconn, $user_buyer);
               $user_seller_result = mysqli_query($dbconn, $user_seller);
               $fetch_row;
+              
           ?>
 
           <?php
@@ -208,11 +209,9 @@
                           $message = "Book(s) you sold to ";
                      ?>
           <?php } 
-
           $sql = "SELECT account_imagepath as path from account where account_id='$transaction_person_id' limit 1";
           $result = mysqli_query($dbconn, $sql);
           $row = mysqli_fetch_assoc($result);
-
                  ?>
 
       <div class="log_content">
@@ -238,7 +237,7 @@
         <?php
          while($records_row = mysqli_fetch_assoc($records_result)) {?>
         <tr>
-          <td><a href="Public_book_info.php?id=<?php echo $row["book_id"];?>"><?php echo $records_row['book_name'];?></a></td>
+          <td><a href="<?php echo "Book_info.php?id=".$records_row["book_id"];?>"><?php echo $records_row['book_name'];?></a></td>
           <td>Php<?php echo $records_row['book_price'];?></td>
           <?php $total += $records_row["book_price"];?>
         <?php }?> 
