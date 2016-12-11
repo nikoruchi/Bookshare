@@ -70,6 +70,21 @@
                 </a>
               </div>
             </li>
+            <li class="nav_cart">
+              <div>
+                <span id="notification_count"></span>
+                <a href="Shopping_list.php" id="notificationLink" onclick = "return getNotification()">
+                  <img src="../images/cart.png" alt="Shopping List" title="Go to your Shopping List" height="40" width="40" >
+                </a>
+              </div>
+            </li>
+            <li class="nav_mark">
+              <div>
+                <a href="View_bookmarks.php">
+                  <img src="../images/logo_bookmark.png" alt="Bookmarks" title="View your bookmarks" height="40" width="40" id="logo3">
+                </a>
+              </div>
+            </li>
             <li class="nav_set">
               <div>
                 <label for="settings">
@@ -128,12 +143,6 @@
 
 <div class="activity_section">
   <div class="icon_section">
-      <a href="View_Bookmarks.php">
-        <img id="bookmark" src="../images/logo_bookmark.png" alt="Bookmarks" title="View your bookmarks">
-      </a>
-      <a href="Shopping_list.php">
-        <img id="cart" src="../images/cart.png" alt="Shopping List" title="Go to your Shopping List">
-      </a>
       <a href="Bookshelf.php" id="bookshelf_section">
         <div id="image_bookshelf">
           <img src="../images/bookshelf.png">
@@ -172,11 +181,6 @@
               $user_buyer_result = mysqli_query($dbconn, $user_buyer);
               $user_seller_result = mysqli_query($dbconn, $user_seller);
               $fetch_row;
-              
-                  //echo $transaction_seller;
-                  //echo $transaction_buyer;
-                
-                //echo mysqli_num_rows($activity_result);
           ?>
 
           <?php
@@ -234,7 +238,7 @@
         <?php
          while($records_row = mysqli_fetch_assoc($records_result)) {?>
         <tr>
-          <td><a href="Book_info.php?id=<?php echo $row["book_id"];?>"><?php echo $records_row['book_name'];?></a></td>
+          <td><a href="Public_book_info.php?id=<?php echo $row["book_id"];?>"><?php echo $records_row['book_name'];?></a></td>
           <td>Php<?php echo $records_row['book_price'];?></td>
           <?php $total += $records_row["book_price"];?>
         <?php }?> 
@@ -278,5 +282,39 @@ $('.top').on('click', function() {
   $parent_box = $(this).closest('.box');
   $parent_box.siblings().find('.bottom').slideUp();
   $parent_box.find('.bottom').slideToggle(200, 'swing');
+});
+</script>
+
+<script type="text/javascript" charset="utf-8">
+function addmsg(type, msg){
+  $('#notification_count').html(msg);
+}
+function waitForMsg(){
+  var id = <?php echo json_encode($account_id);?>;  
+  $.ajax({
+  type: "GET",
+  url: "shopping.php?id="+id,
+  async: true,
+  cache: false,
+  timeout:50000,
+ 
+  success: function(data){
+    addmsg("new", data);
+    setTimeout(
+      waitForMsg,
+      1000
+    );
+  },
+  error: function(XMLHttpRequest, textStatus, errorThrown){
+    addmsg("error", textStatus + " (" + errorThrown + ")");
+    setTimeout(
+      waitForMsg,
+      15000);
+    }
+  });
+};
+ 
+$(document).ready(function(){
+  waitForMsg();
 });
 </script>

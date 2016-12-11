@@ -23,6 +23,7 @@
 	<link rel="stylesheet" type="text/css" href="../css/style.css">
 	<link rel="stylesheet" type="text/css" href="../css/normalize.css">
 	<link rel="stylesheet" type="text/css" href="../css/library_style.css">
+	<script src="../js/jquery.min.js"></script>
 </head>
 <body>
 	<div class="wrapper">
@@ -52,6 +53,21 @@
             			<label for="username"><?php echo $_SESSION['username'];?></label>
             		</a>
             	</div>
+            </li>
+            <li class="nav_cart">
+              <div>
+                <span id="notification_count"></span>
+                <a href="Shopping_list.php" id="notificationLink" onclick = "return getNotification()">
+                  <img src="../images/cart.png" alt="Shopping List" title="Go to your Shopping List" height="40" width="40" >
+                </a>
+              </div>
+            </li>
+            <li class="nav_mark">
+              <div>
+                <a href="View_bookmarks.php">
+                  <img src="../images/logo_bookmark.png" alt="Bookmarks" title="View your bookmarks" height="40" width="40" id="logo3">
+                </a>
+              </div>
             </li>
             <li class="nav_set">
             	<div>
@@ -179,3 +195,36 @@
 	</div>
 </body>
 </html>
+<script type="text/javascript" charset="utf-8">
+function addmsg(type, msg){
+  $('#notification_count').html(msg);
+}
+function waitForMsg(){
+  var id = <?php echo json_encode($buyer_id);?>;  
+  $.ajax({
+  type: "GET",
+  url: "shopping.php?id="+id,
+  async: true,
+  cache: false,
+  timeout:50000,
+ 
+  success: function(data){
+    addmsg("new", data);
+    setTimeout(
+      waitForMsg,
+      1000
+    );
+  },
+  error: function(XMLHttpRequest, textStatus, errorThrown){
+    addmsg("error", textStatus + " (" + errorThrown + ")");
+    setTimeout(
+      waitForMsg,
+      15000);
+    }
+  });
+};
+ 
+$(document).ready(function(){
+  waitForMsg();
+});
+</script>

@@ -58,6 +58,21 @@
             		</a>
             	</div>
             </li>
+            <li class="nav_cart">
+              <div>
+                <span id="notification_count"></span>
+                <a href="Shopping_list.php" id="notificationLink" onclick = "return getNotification()">
+                  <img src="../images/cart.png" alt="Shopping List" title="Go to your Shopping List" height="40" width="40" >
+                </a>
+              </div>
+            </li>
+            <li class="nav_mark">
+              <div>
+                <a href="View_bookmarks.php">
+                  <img src="../images/logo_bookmark.png" alt="Bookmarks" title="View your bookmarks" height="40" width="40" id="logo3">
+                </a>
+              </div>
+            </li>
             <li class="nav_set">
             	<div>
             		<label for="settings">
@@ -94,7 +109,7 @@
           		<img id="thumbnail" src=" <?php echo $row['book_imagepath']?>">
           	</a>
           		<p id="content">
-          			<strong><?php echo $row['book_price']?></strong>
+          			<strong>Php<?php echo $row['book_price']?></strong>
           			<label id="bookname"><?php echo $row['book_name']?></label>
 					<label id="accname"><?php echo $row['account_name']?></label>
 					<form id="proceed">
@@ -146,3 +161,37 @@
 	</div>
 </body>
 </html>
+
+<script type="text/javascript" charset="utf-8">
+function addmsg(type, msg){
+  $('#notification_count').html(msg);
+}
+function waitForMsg(){
+  var id = <?php echo json_encode($buyer_id);?>;  
+  $.ajax({
+  type: "GET",
+  url: "shopping.php?id=" + id,
+  async: true,
+  cache: false,
+  timeout:50000,
+ 
+  success: function(data){
+    addmsg("new", data);
+    setTimeout(
+      waitForMsg,
+      1000
+    );
+  },
+  error: function(XMLHttpRequest, textStatus, errorThrown){
+    addmsg("error", textStatus + " (" + errorThrown + ")");
+    setTimeout(
+      waitForMsg,
+      15000);
+    }
+  });
+};
+ 
+$(document).ready(function(){
+  waitForMsg();
+});
+</script>
