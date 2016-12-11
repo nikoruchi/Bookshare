@@ -45,7 +45,7 @@
 		$sql = "INSERT INTO cart (seller_id, book_id, buyer_id, date) VALUES ('$seller', '$id', '$buyer_id','$date')";
 		$sqlresult = mysqli_query($dbconn,$sql);
 		if($sqlresult){
-			header("Location:Shopping_list.php");
+			header("Location:Public_book_info.php?id=$id");
 		} else { ?>
 			<script>
 				function myfuction(){

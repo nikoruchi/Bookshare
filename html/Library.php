@@ -8,12 +8,7 @@
     $user_result=mysqli_query($dbconn, $user_query);
     $row_session = mysqli_fetch_assoc($user_result);
     $user_image = $row_session['account_imagepath'];
-
     $resultperpage = 12;
-    $sql = "SELECT * FROM books WHERE books.book_id NOT IN (SELECT cart.book_id FROM cart) order by book_id asc";
-    $retval = mysqli_query($dbconn, $sql);
-    $totalbooks = mysqli_num_rows($retval);
-    $totalpages = ceil($totalbooks/$resultperpage);
 ?>
 
 <!DOCTYPE html>
@@ -144,13 +139,22 @@
 	 <div class=" library_section well well-sm " >
 		<?php
 		if(($course!="Bookshare Library")){  
-			$start_from = ($page-1)*$resultperpage;
-			$query = "SELECT * FROM book_info WHERE book_subject LIKE '%$course%'order by book_id asc limit $start_from,".$resultperpage;
+			$start_from = ($page)*$resultperpage;
+			$query = "SELECT * FROM book_info WHERE book_subject LIKE '%$course%' order by book_id asc limit $start_from,".$resultperpage;
 			$result = mysqli_query($dbconn,$query);
+
+			$sql01 = "SELECT * FROM book_info WHERE book_subject LIKE '%course%' order by book_id asc";
+			$retval = mysqli_query($dbconn, $sql01);
+			$totalbooks = mysqli_num_rows($retval);
+			$totalpages = ceil($totalbooks/$resultperpage);
+
 			if((mysqli_num_rows($result))>0){ 
 				while(list($info_id,$book_id,$book_subject, $book_pages,$book_quality,$book_author,$book_details)=mysqli_fetch_row($result)){
 					$que = "SELECT * FROM books WHERE books.book_id = '$book_id' AND books.book_id NOT IN (SELECT cart.book_id FROM cart)";
 					$res = mysqli_query($dbconn,$que);
+
+					$value = mysqli_num_rows($res);
+
 					if(mysqli_num_rows($res)>0){
 						while(list($book_id,$account_id,$book_name,$book_edition,$book_price,$book_desc,$book_imagepath)=mysqli_fetch_row($res)){?>
 							<a class="bookshelf_book_container" href="<?php if($account_id==$buyer_id){echo "Book_info.php?id=".$book_id;}else{ echo "Public_book_info.php?id=".$book_id;}?>" >
@@ -171,6 +175,12 @@
 			$query="SELECT * FROM books WHERE books.book_id NOT IN (SELECT cart.book_id FROM cart) order by book_id asc limit $start_from,".$resultperpage; 
 			$result = mysqli_query($dbconn,$query);
 			$numresult = mysqli_num_rows($result);
+
+			$sql = "SELECT * FROM books WHERE books.book_id NOT IN (SELECT cart.book_id FROM cart) order by book_id asc";
+    		$retval = mysqli_query($dbconn, $sql);
+    		$totalbooks = mysqli_num_rows($retval);
+    		$totalpages = ceil($totalbooks/$resultperpage);
+
 			if(mysqli_num_rows($result)>0) { 
 				while(list($book_id,$account_id,$book_name,$book_edition,$book_price,$book_desc,$book_imagepath)=mysqli_fetch_row($result)){ ?>
 					<a class="bookshelf_book_container" href="<?php if($account_id==$buyer_id){echo "Book_info.php?id=".$book_id;}else{ echo "Public_book_info.php?id=".$book_id;}?>">
@@ -187,19 +197,18 @@
 		mysqli_close($dbconn);
 	?>
 </div>
-
-<content id="lib_prev_next">
-  	<?php if($page=='0'){ ?>
+  <content id="lib_prev_next">
+  	<?php if($page=='0' and $totalpages!='0'){ ?>
 		<a href="Library.php?page=<?php echo $page+1?>&amp;ID=<?php echo $course?>" id="next" >Next >> </a>
-	<?php }else if($page==$totalpages-1){ ?>
+	<?php }else if($page==$totalpages-1 and $totalpages!='0'){ ?>
 	 	<a href="Library.php?page=<?php echo $page-1?>&amp;ID=<?php echo $course?>" id="prev" ><< Prev </a>
+	<?php }else if($totalpages=='0'){ ?>
+		<p></p>
 	<?php }else{ ?>
 	 	<a href="Library.php?page=<?php echo $page-1?>" name="page"><< Prev</a>  &nbsp;|&nbsp;
 	    <a href="Library.php?page=<?php echo $page+1?>" id="next" name="page">Next >></a>
 	 <?php } ?>
-</content>
-
-<!-- DONT -->
+	</content>
 </div>
 </div>
 
@@ -209,12 +218,13 @@
 	</div>
 </body>
 </html>
+
 <script type="text/javascript" charset="utf-8">
 function addmsg(type, msg){
   $('#notification_count').html(msg);
 }
 function waitForMsg(){
-  var id = <?php echo json_encode($buyer_id);?>;  
+  var id = <?php echo json_encode($buyer_id);?> ; 
   $.ajax({
   type: "GET",
   url: "shopping.php?id="+id,
