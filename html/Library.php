@@ -8,6 +8,12 @@
     $user_result=mysqli_query($dbconn, $user_query);
     $row_session = mysqli_fetch_assoc($user_result);
     $user_image = $row_session['account_imagepath'];
+
+    $resultperpage = 12;
+    $sql = "SELECT * FROM books WHERE books.book_id NOT IN (SELECT cart.book_id FROM cart) order by book_id asc";
+    $retval = mysqli_query($dbconn, $sql);
+    $totalbooks = mysqli_num_rows($retval);
+    $totalpages = ceil($totalbooks/$resultperpage);
 ?>
 
 <!DOCTYPE html>
@@ -121,7 +127,7 @@
 	  		if(isset($_GET['page'])){
     			$page=$_GET['page'];
   			}else{
-   				$page=1;
+   				$page=0;
   			}
 
 	 		if (isset($_GET['ID'])) {
@@ -129,8 +135,7 @@
 			} else {
 				$course="Bookshare Library";
 			}
-
-			$resultperpage = 12;
+	
 	   ?>
 	 		<h2 id="ID_label"><?php echo $course ?></h2>
 	 		
@@ -161,7 +166,7 @@
 
 		} else {
 
-			$start_from = ($page-1)*$resultperpage;
+			$start_from = ($page)*$resultperpage;
 		
 			$query="SELECT * FROM books WHERE books.book_id NOT IN (SELECT cart.book_id FROM cart) order by book_id asc limit $start_from,".$resultperpage; 
 			$result = mysqli_query($dbconn,$query);
@@ -182,10 +187,19 @@
 		mysqli_close($dbconn);
 	?>
 </div>
-  	<content id="lib_prev_next">
-	 	<a href="Library.php?page=<?php echo $page-1?>&amp;ID=<?php echo $course?>" id="prev" ><< Prev </a> &nbsp;|&nbsp;
-	 	<a href="Library.php?page=<?php echo $page+1?>&amp;ID=<?php echo $course?>" id="next" >Next >> </a>
-	</content>
+
+<content id="lib_prev_next">
+  	<?php if($page=='0'){ ?>
+		<a href="Library.php?page=<?php echo $page+1?>&amp;ID=<?php echo $course?>" id="next" >Next >> </a>
+	<?php }else if($page==$totalpages-1){ ?>
+	 	<a href="Library.php?page=<?php echo $page-1?>&amp;ID=<?php echo $course?>" id="prev" ><< Prev </a>
+	<?php }else{ ?>
+	 	<a href="Library.php?page=<?php echo $page-1?>" name="page"><< Prev</a>  &nbsp;|&nbsp;
+	    <a href="Library.php?page=<?php echo $page+1?>" id="next" name="page">Next >></a>
+	 <?php } ?>
+</content>
+
+<!-- DONT -->
 </div>
 </div>
 

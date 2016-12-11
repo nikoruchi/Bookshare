@@ -9,20 +9,25 @@
     $user_result=mysqli_query($dbconn, $user_query);
     $row_session = mysqli_fetch_assoc($user_result);
     $user_image = $row_session['account_imagepath'];
+
+    $resultperpage = 6;
+    $sql = "SELECT * from books as B join account as A on B.account_id=A.account_id WHERE B.account_id='$id' order by book_id";
+    $retval = mysqli_query($dbconn, $sql);
+    $totalbooks = mysqli_num_rows($retval);
+    $totalpages = ceil($totalbooks/$resultperpage);  
 ?>
 
 <?php
   if(isset($_GET['page'])){
     $page=$_GET['page'];
   }else{ 
-    $page=1;
+    $page=0;
   }
-  $start_from = ($page-1)*$resultperpage;
+  $start_from = ($page)*$resultperpage;
   
   $bookname_shelf = "SELECT * from books as B join account as A on B.account_id=A.account_id WHERE B.account_id='$id' order by book_id asc limit $start_from,".$resultperpage;
   $shelf_result=mysqli_query($dbconn, $bookname_shelf);
   $numbooks=mysqli_num_rows($shelf_result);
-  $totalpages = ceil($numbooks['$numbooks']);
 ?>
 
 <!DOCTYPE html>
@@ -105,7 +110,6 @@
    <div class="add_button_container">
     <div id="btn_container">
       <a href="Add_Book.php"><input type="button" name="add_a_book" value="+Add a Book" class="btn btn-primary"></a>
-      <!-- <a href="View_Bookmarks.php"><input id="bookmarks" type="button" name="add_a_book" value="Bookmarks" class="btn btn-success"></a> -->
     </div>
    </div>
 
@@ -126,19 +130,23 @@
 
 </div>
 
-   <content id="prev_next">
+<content id="prev_next">
 
-<?php
-  if($page=='1'){?>
-    <a href=" " id="prev" > << Prev </a> &nbsp;|&nbsp;
+<?php  if($page==0){?>
     <a href="Bookshelf.php?page=<?php echo $page+1?>" name="page">Next >></a>
-<?php
-  }else{?>
+
+<?php  }else if($page==$totalpages-1){?>
+    <a href="Bookshelf.php?page=<?php echo $page-1?>" name="page"><< Prev</a>
+
+<?php }else if($page=='0' and $totalpages=='0'){ ?>
+      <p></p>
+
+<?php  }else{?>
     <a href="Bookshelf.php?page=<?php echo $page-1?>" name="page"><< Prev</a>  &nbsp;|&nbsp;
     <a href="Bookshelf.php?page=<?php echo $page+1?>" id="next" name="page">Next >></a>
  <?php }
 ?>
-   </content>
+</content>
 
 <!-- DON'T -->
   </div>  
