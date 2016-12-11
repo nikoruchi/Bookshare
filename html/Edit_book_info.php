@@ -11,6 +11,7 @@
     $row_session = mysqli_fetch_assoc($user_result);
     $user_image = $row_session['account_imagepath'];
 
+
 	$book_id_val=$_GET["id"];  	
   	if(isset($book_id_val)){
   		$book_info = "SELECT * from book_info BI, books B where B.book_id=BI.book_id and BI.book_id=$book_id_val";
@@ -34,7 +35,8 @@
 
 <?php
 	if(isset($_POST['update'])){
-		$price=addslashes($_POST["price"]);
+		$price=($_POST["book_price"]);
+		$quality=($_POST["quality"]);
 	 	$title=addslashes($_POST["title"]);
 	 	$edition=addslashes($_POST["edition"]);
 	 	$authors=addslashes($_POST["author"]);
@@ -51,9 +53,19 @@
 		if($category==''){
 			$category=$Category;
 		}
+
+		// $pattern = preg_replace('/[^0-9]/',' ', $Edition);
+		$pattern = preg_match_all('/[0-9]/', $Edition);
+		if (!($pattern)){
+			$prompt="**Edition should contain number only.";
+		}        
+
+
+        if ($pattern){ }
+       	else{$prompt = "**Wrong Edition input.";}
 		
 	  	if ($prompt=='') {
-			$info_update = "UPDATE book_info BI, books B SET book_price= '$price', book_name= '$title', book_author= '$authors', book_desc= '$description', book_details= '$details', book_edition='$edition', book_subject='$category' where B.book_id=BI.book_id and BI.book_id=$book_id";
+			$info_update = "UPDATE book_info BI, books B SET B.book_price= '$price', B.book_name= '$title', BI.book_author= '$authors', B.book_desc= '$description', BI.book_details= '$details', B.book_edition='$edition', BI.book_subject='$category', BI.book_quality='$quality' where B.book_id=BI.book_id and BI.book_id=$book_id";
 			$update_result=mysqli_query( $dbconn, $info_update);
 
 	    	if($update_result){
@@ -64,6 +76,7 @@
 	    	else{
 	    		echo "ERR";
 	    	}
+
 		}
 	}
 
@@ -89,7 +102,6 @@
 			    echo "File is not an image.";
 			    $uploadOk = 0;
 			}
-			
 
 			// Check if file already exists
 			if (file_exists($target_file)) {
@@ -230,54 +242,52 @@
 
 		<div class="book_info1">
 			<content class="col-xs-4" id='price'>
-				<label for='price' id='price'>Price:</label>
-				<input type="text" name="price" class="form-control" value="<?php echo $Price ?>">
+				<label for='book_price' id='price'>Price:</label>
+				<input required="" type="text" name="book_price" class="form-control" value="<?php echo $Price ?>">
 			</content>
 		</div>
 		<div class="book_info1a">
  			<label for="category" id="book_info1a_label"> Course Category: </label>
-				<select name="category" id="category" class="form-control">			
-			   	<option value=""> -- </option>
-			   	<option value="Accountancy"> Accountancy </option>
-			   	<option value="Applied Mathematics"> Applied Mathematics </option>			   	
-			   	<option value="Biology"> Biology </option>
-			   	<option value="Business Administration"> Business Administration </option>
-			   	<option value="Chemical Engineering"> Chemical Engineering </option>
-			   	<option value="Chemistry"> Chemistry </option>
-			   	<option value="Communication And Media Studies"> Communication and Media Studies </option>
-			   	<option value="Community Development"> Community Development </option>
-			   	<option value="Computer Science"> Computer Science </option>
-			   	<option value="Economics"> Economics </option>
-			   	<option value="Fisheries"> Fisheries </option>
-			   	<option value="Food Technology"> Food Technology </option>
-			   	<option value="History"> History </option>
-			   	<option value="Literature"> Literature </option>
-			   	<option value="Management"> Management </option>
-			   	<option value="Political Science"> Political Science </option>
-			   	<option value="Psychology"> Psychology </option>
-			   	<option value="Public Health"> Public Health </option>
-			   	<option value="Sociology"> Sociology </option>
-			   	<option value="Statistics"> Statistics </option>
-			</select>
+ 			<?php 
+
+ 				$sql = "SELECT book_subject from book_info where book_id='$book_id_val' limit 1";
+ 				$result = mysqli_query($dbconn, $sql);
+ 				$sql_result = mysqli_fetch_assoc($result);
+ 				$book_subject = $sql_result["book_subject"];
+ 				$subject_counter = 0;
+ 				$subject = array("--", "Accountancy", "Applied Mathematics", "Biology", "Business Administration", "Chemical Engineering", "Chemistry", "Communication And Media Studies", "Community Development", "Computer Science", "Economics", "Fisheries", "Food Technology", "History", "Literature", "Management", "Political Science", "Psychology", "Public Health", "Sociology", "Statistics");
+ 			?>
+
+				<select name="category" id="category" class="form-control">		
+				<?php for($subject_counter=0; $subject_counter<21; $subject_counter++){
+					if($book_subject==$subject[$subject_counter]){	?>
+			   		<option selected="" value="<?php echo $subject[$subject_counter]; ?>"> <?php echo $subject[$subject_counter]; ?> </option>
+			   		<?php } else{?>
+			   		<option value="<?php echo $subject[$subject_counter]; ?>"> <?php echo $subject[$subject_counter]; ?> </option>
+			   		<?php }}?>
+			   	
+				</select>
+
+
 
 			
  		</div>
 		<div class="book_info2e">
 			<content class="col-xs-10">
 				<label for='title' id="info_label">Title: </label>
-				<input type="text" name="title" class="form-control" placeholder="Title of the Book" value="<?php echo $Title ?>">
+				<input required="" type="text" name="title" class="form-control" placeholder="Title of the Book" value="<?php echo $Title ?>">
 			</content>
 			<content class="col-xs-2">
 				<label for='edition' id="info_label">Edition: </label>
-				<input type="text" name="edition" class="form-control" placeholder="1st, 2nd, etc." value="<?php echo $Edition ?>">
+				<input type="number" name="edition" min="1" class="form-control" placeholder="1st, 2nd, etc." value="<?php echo $Edition ?>">
 			</content>
 			<content class=" extra_details col-xs-2">
 				<label id="info_label" for='quality'>Quality: </label>
-				<input type="text" name="quality" class="form-control" value="<?php echo $Quality ?>" placeholder="0-100%">
+				<input type="number" name="quality" min="1" class="form-control" value="<?php echo $Quality ?>" placeholder="0-100%">
 			</content>
 			<content class=" extra_details col-xs-4">
 				<label  id="info_label" for='quality'>Pages: </label>
-				<input type="text" name="price" class="form-control" value="<?php echo $Pages ?>" placeholder="# of pages">
+				<input type="number" name="price" min="1" class="form-control" value="<?php echo $Pages ?>" placeholder="# of pages">
 			</content>
 			<content class="col-xs-10">
 				<label for='author' id="info_label" >Author/s: </label>

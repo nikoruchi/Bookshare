@@ -13,6 +13,15 @@
 
     $prompt='';
     $prompt2='';
+    $prev_price="";
+	$prev_title='';
+	$prev_edition="";
+	$prev_category="";
+	$prev_author="";
+	$prev_description="";
+	$prev_details="";
+	$prev_pages="";
+	$prev_quality="";
 
   
 	if(isset($_POST['add'])){
@@ -23,7 +32,42 @@
  		$authors=addslashes($_POST["author"]);
  		$description=addslashes($_POST["description"]);
  		$details=addslashes($_POST["details"]);
+ 		$pages = $_POST["pages"];
+ 		$quality = $_POST["quality"];
  		$book_path="../uploads/default.jpg";
+
+
+ 		$prev_price=$price;
+		$prev_title=$title;
+		$prev_edition=$edition;
+		$prev_category=$category;
+		$prev_author=$authors;
+		$prev_description=$description;
+		$prev_details=$details;
+		$prev_pages=$pages;
+		$prev_quality=$quality;
+
+		if(empty($edition)){
+			$edition = '';
+		}
+		if(empty($category)){
+			$category = "--";
+		}
+		if(empty($authors)){
+			$authors = "Not Specified";
+		}
+		if(empty($description)){
+			$description="no description added";
+		}
+		if(empty($details)){
+			$details="n/a";
+		}
+		if(empty($pages)){
+			$pages = "0";
+		}
+		if(empty($quality)){
+			$quality = "n/a";
+		}
 
  		if($price=='' || $title==''){
 			$prompt="**Title and Price are Required. ";
@@ -35,12 +79,12 @@
 	        $add_result= mysqli_query($dbconn, $book_add); 
 
 	        if($add_result){
-	        	$book_added="SELECT * FROM books WHERE book_name ='$title' AND account_id='$seller' AND book_edition='$edition'";
+	        	$book_added="SELECT max(book_id) as book_id from books";
 	        	$added_result = mysqli_query($dbconn,$book_added);
-	        	while($row1=mysqli_fetch_assoc($added_result)){
-	        		$book_id_val=$row1["book_id"];
-	        	}
-	        	$add_book1="INSERT INTO book_info (book_id, book_subject, book_author, book_details) VALUES ('$book_id_val','$category','$authors','$details')";
+	        	$row1=mysqli_fetch_assoc($added_result);
+	        	$book_id_val=$row1["book_id"];
+	        	
+	        	$add_book1="INSERT INTO book_info (book_id,book_subject, book_author, book_details, book_pages, book_quality) VALUES ('$book_id_val','$category','$authors','$details', '$pages', '$quality')";
 	        	if(mysqli_query($dbconn, $add_book1)){
 	        		header("Location:Edit_book_info.php?id=$book_id_val");
 	        	} 
@@ -163,59 +207,52 @@
 		<div class="book_info1">
 			<content class="col-xs-4" id='price'>
 				<label for='price' id='price'>Price:</label>
-				<input type="text" name="price" value=" " class="form-control">
+				<input type="text" name="price" required="" value="<?= $prev_price; ?>" class="form-control">
 			</content>
 		</div>
 		<div class="book_info1a">
  			<label for="category" id="book_info1a_label">Course Category:</label>
- 			<select name="category" id="category" class="form-control">			
-			   	<option value=" "> -- </option>
-			   	<option value="Accountancy"> Accountancy </option>
-			   	<option value="Applied Mathematics"> Applied Mathematics </option>			   	
-			   	<option value="Biology"> Biology </option>
-			   	<option value="Business Administration"> Business Administration </option>
-			   	<option value="Chemical Engineering"> Chemical Engineering </option>
-			   	<option value="Chemistry"> Chemistry </option>
-			   	<option value="Communication And Media Studies"> Communication and Media Studies </option>
-			   	<option value="Community Development"> Community Development </option>
-			   	<option value="Computer Science"> Computer Science </option>
-			   	<option value="Economics"> Economics </option>
-			   	<option value="Fisheries"> Fisheries </option>
-			   	<option value="Food Technology"> Food Technology </option>
-			   	<option value="History"> History </option>
-			   	<option value="Literature"> Literature </option>
-			   	<option value="Management"> Management </option>
-			   	<option value="Political Science"> Political Science </option>
-			   	<option value="Psychology"> Psychology </option>
-			   	<option value="Public Health"> Public Health </option>
-			   	<option value="Sociology"> Sociology </option>
-			   	<option value="Statistics"> Statistics </option>
-			</select>
+ 			<?php 
+ 				$prev_category;
+ 				$subject_counter = 0;
+ 				$subject = array("--", "Accountancy", "Applied Mathematics", "Biology", "Business Administration", "Chemical Engineering", "Chemistry", "Communication And Media Studies", "Community Development", "Computer Science", "Economics", "Fisheries", "Food Technology", "History", "Literature", "Management", "Political Science", "Psychology", "Public Health", "Sociology", "Statistics");
+ 			?>
+
+				<select name="category" id="category" class="form-control">		
+				<?php for($subject_counter=0; $subject_counter<21; $subject_counter++){
+					if($prev_category==$subject[$subject_counter]){	?>
+			   		<option selected="" value="<?php echo $subject[$subject_counter]; ?>"> <?php echo $subject[$subject_counter]; ?> </option>
+			   		<?php } else{?>
+			   		<option value="<?php echo $subject[$subject_counter]; ?>"> <?php echo $subject[$subject_counter]; ?> </option>
+			   		<?php }}?>
+			   	
+				</select>
  		</div>
+
 		<div class="book_info2e">
 			<content class="col-xs-10">
 				<label for='title' id="info_label">Title: </label>
-				<input type="text" name="title" class="form-control" placeholder="Title of the Book" >
+				<input required="" type="text" name="title" class="form-control" placeholder="Title of the Book" value="<?= $prev_title; ?>">
 			</content>
 			<content class="col-xs-2">
 				<label for='edition' id="info_label">Edition: </label>
-				<input type="text" name="edition" class="form-control" placeholder="1st, 2nd, etc.">
+				<input type="text" name="edition" class="form-control" placeholder="1st, 2nd, etc." value="<?= $prev_edition?>">
 			</content>
 			<content class=" extra_details col-xs-2">
 				<label id="info_label" for='quality'>Quality: </label>
-				<input type="text" name="quality" class="form-control" placeholder="0-100%">
+				<input type="text" name="quality" class="form-control" placeholder="0-100%" value="<?= $prev_quality?>">
 			</content>
 			<content class=" extra_details col-xs-4">
-				<label  id="info_label" for='quality'>Pages: </label>
-				<input type="text" name="price" class="form-control" placeholder="# of pages">
+				<label  id="info_label" for='pages'>Pages: </label>
+				<input type="text" name="pages" class="form-control" placeholder="# of pages" value="<?= $prev_pages?>">
 			</content>
 			<content class="col-xs-10">
 				<label for='author' id="info_label" >Author/s: </label>
-				<input type="text" name="author" class="form-control" placeholder="Author/s of the Book">
+				<input type="text" name="author" class="form-control" placeholder="Author/s of the Book" value="<?= $prev_author?>">
 				<label for='description' id="info_label">Description: </label>
-				<textarea name="description" size="100" class="form-control" id="description" placeholder="What is this book about?"></textarea>
+				<textarea name="description" size="100" class="form-control" id="description" placeholder="What is this book about?" value="<?= $prev_description?>"></textarea>
 				<label for='details' id="info_label">Details: </label>
-				<textarea name="details" value=" " size="100" class="form-control" id="details" placeholder="Does the book have any specifc features? (e.g: author's signature, plastic cover, etc)"></textarea>
+				<textarea name="details" value=" " size="100" class="form-control" id="details" placeholder="Does the book have any specifc features? (e.g: author's signature, plastic cover, etc)" value="<?= $prev_details?>"></textarea>
 			</content>
 		</div>
 
@@ -236,6 +273,7 @@
 	</div>
 </body>
 </html>
+
 <script type="text/javascript" charset="utf-8">
 function addmsg(type, msg){
   $('#notification_count').html(msg);

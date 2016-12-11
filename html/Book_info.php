@@ -4,6 +4,9 @@
 	include("search_book.php");
 	session_start();
 
+	if(!isset($_SESSION['buyer_id'])){
+      header("Location: index.php");
+    }
 	
 	?>
 
@@ -22,8 +25,8 @@
   if($info_result){
   	while ($row=mysqli_fetch_assoc($info_result)){ 
  		$Price=$row["book_price"];
+    $Pages=$row["book_pages"];
  		$Quality=$row["book_quality"];
- 		$Pages=$row["book_pages"];
  		$Title=$row["book_name"];
  		$Edition=$row["book_edition"];
  		$Authors=$row["book_author"];
@@ -133,6 +136,12 @@
 	<div class="container">
 		<a href="Bookshelf.php"><h1 id="bookshelf">Bookshelf</h1></a>
 	<div class=" info_section well well-sm" > 
+	<?php 
+		$sql = "SELECT book_id from cart where book_id='$book_id_val' and status='bought'";
+		$result = mysqli_query($dbconn, $sql);
+		$num_rows=mysqli_num_rows($result);
+
+		if($num_rows==0){ ?>
 	 <div class="dropdown_menu">
 	 	<div class="edit_container">
 			<img src="../images/edit_icon.png" title="Edit" alt="Edit" height="25" width="65" id="edit_icon" onclick="edit_menu()" class=" edit_btn">
@@ -142,6 +151,7 @@
 			<a name="delete" data-toggle="modal" data-target="#myModal4"> Delete Book</a>
 		</div>
 	 </div>
+	 	<?php }?>
 	
 
 	 <div class="info">
@@ -156,14 +166,14 @@
 		<div class="book_info1a">
  			<label for="category" id="book_info1a_label"> Course Category: </label>
 			<label for='category' class="info1_items"><?php echo $Category ?></label>
-			<content id="extra_details">
-				<label id="book_info1a_label" for='quality'>Quality: </label>
-				<p><?php echo $Quality ?></p>
-			</content>
-			<content id="extra_details">
-				<label id="book_info1a_label" for='pages'>No. of Pages: </label>
-				<label><?php echo $Pages ?></label> 
-			</content>
+      <content id="extra_details">
+        <label id="book_info1a_label" for='quality'>Quality: </label>
+        <p><?php echo $Quality ?>%</p>
+      </content>
+      <content id="extra_details">
+        <label id="book_info1a_label" for='pages'>No. of Pages: </label>
+        <label><?php echo $Pages ?></label> 
+      </content>
 		</div>
 		<div id="book_info2">
 			<label for='title' id="info_label_title"> 
@@ -171,7 +181,24 @@
 			</label>
 			<content class="info_container" id="info_label_title"> 
 				<label> <?php 
-					if ($Edition==''){$Edition="Unknown";} 
+					if ($Edition=='' || $Edition<1){$Edition="Unknown";}
+          // =================================================>>>>>
+
+              
+              $temp = $Edition%100;
+
+            if ($temp=='11' || $temp=='12' || $temp=='13' || $temp=='14' || $temp=='15' || $temp=='16' || $temp=='17' || $temp=='18' || $temp=='19') { $Edition = $Edition."th";
+            }else{
+              $temp = $Edition%10;
+                
+              if($temp=='0'){  $Edition = $Edition." ";}
+              if($temp=='1'){ $Edition = $Edition."st";}
+              if($temp=='2'){ $Edition = $Edition."nd";}
+              if($temp=='3'){ $Edition = $Edition."rd";}
+              if($temp=='4' || $temp=='5' || $temp=='6' || $temp=='7' || $temp=='8' || $temp=='9'){$Edition = $Edition."th";}
+            }
+
+          // =================================================>>>>>
 					echo $Edition; ?> Edition
 				</label>
 			</content>
@@ -241,6 +268,8 @@ window.onclick = function(event) {
     }
   }
 }
+</script>
+
 </script>
 <script type="text/javascript" charset="utf-8">
 function addmsg(type, msg){
