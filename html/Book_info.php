@@ -1,72 +1,78 @@
-
 <?php
 	include("connect.php");
 	include("search_book.php");
-	session_start();
-
-	
+  session_start();
 	?>
+  <?php
+      
+      $id = $_SESSION['buyer_id'];
+      $user_query= "SELECT * from account where account_id='$id'";
+      $user_result=mysqli_query($dbconn, $user_query);
+      $row_session = mysqli_fetch_assoc($user_result);
+      $user_image = $row_session['account_imagepath'];
 
-<?php
+      
+      $account_id = $_GET['seller'];
+      //$account_id = 1;
+      $user_query= "SELECT * from account where account_id='$account_id'";
+      $user_result=mysqli_query($dbconn, $user_query);
+      $row_session = mysqli_fetch_assoc($user_result);
+      $account_name = $row_session['account_name'];
+      $user_name = $row_session['username'];
+      $password = $row_session['password'];
+      $imagepath = $row_session['account_imagepath'];
+      $year_level = $row_session['year_level'];
+      $course = $row_session['course'];
+      $query1 ="SELECT * FROM account_contacts where account_id='$account_id'";
+      $result1 = mysqli_query($dbconn, $query1);
+      //$rows1 = mysqli_num_rows($result1); 
+      //$row1 = mysqli_fetch_assoc($result1);
+      //$contact_number=$row1['contact_number'];
+      $query2 ="SELECT * FROM account_emails where account_id='$account_id'";
+      $result2 = mysqli_query($dbconn, $query2);
+      //$rows2 = mysqli_num_rows($result2); 
+      //$row2 = mysqli_fetch_assoc($result2);
+      //$email=$row2['email'];
 
-  	$buyer_id = $_SESSION['buyer_id'];
-	$user_query= "SELECT * from account where account_id='$buyer_id'";
-    $user_result=mysqli_query($dbconn, $user_query);
-    $row_session = mysqli_fetch_assoc($user_result);
-    $user_image = $row_session['account_imagepath'];
+      // if(isset($_POST['Edit'])){ 
+      
+      // header("Location:edit.php");  
+      // }
+    ?>
+<?php 
+   $resultperpage = 5;
+    if(isset($_GET['page'])){
+      $page=$_GET['page'];
+    }else{ 
+      $page=1;
+    }
+    $start_from = ($page-1)*$resultperpage;
 
-  $book_id_val=$_GET["id"];
-  $bookname_info="SELECT * from book_info BI, books B where B.book_id=BI.book_id and BI.book_id='$book_id_val'";
-  $info_result=mysqli_query($dbconn, $bookname_info);
-  $num_info=mysqli_num_rows($info_result);
-  if($info_result){
-  	while ($row=mysqli_fetch_assoc($info_result)){ 
- 		$Price=$row["book_price"];
- 		$Quality=$row["book_quality"];
- 		$Title=$row["book_name"];
- 		$Edition=$row["book_edition"];
- 		$Authors=$row["book_author"];
- 		$Description=$row["book_desc"];
- 		$Details=$row["book_details"];
- 		$Category=$row["book_subject"];
- 		$book_image=$row["book_imagepath"];
-  	} 
-  } 
+  $bookname_shelf = "SELECT * from books as B join account as A on B.account_id=A.account_id WHERE B.account_id='$account_id' order by book_id asc limit $start_from,".$resultperpage;
+  $shelf_result=mysqli_query($dbconn, $bookname_shelf);
+  $numbooks=mysqli_num_rows($shelf_result);
+  $totalpages = ceil($numbooks['$numbooks']);
 ?>
-
-<?php
-	if(isset($_POST["delete"])){
-		$book_id_val=$_GET["id"];
-		$book_delete="DELETE FROM book_info WHERE  book_id='$book_id_val' ";
-		$del_result=mysqli_query($dbconn, $book_delete);
-
-		if($del_result){ 
-			$book_delete="DELETE FROM books WHERE  book_id='$book_id_val'";
-			$del_result=mysqli_query($dbconn, $book_delete);
-
-			if($del_result){ 
-				header("Location: Bookshelf.php"); 
-				mysqli_close($dbconn);
-			}
-		}
-	}
-?>
-
 
 <!DOCTYPE html>
-<html>
+<html class="no-js">
 <head>
 	<meta charset="utf-8">
 	<meta name="author" content="CMSC 128 Lab Sec. 2">
 	<meta name="description" content="Sell, buy, and trade books with your schoolmates.">
 	<meta name="keywords" content="Book, Books, Trade Book, Sell Book, Buy Book">
-	<title> Book Info </title>
+	<title>Your Profile</title>
 
-	<link rel="shortcut icon" href="../images/official_logo.png">
+  <link rel="shortcut icon" href="../images/official_logo.png">
 	<link rel="stylesheet" type="text/css" href="../css/style.css">
-	<script src="../js/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/normalize.css">
-    <script src="../js/modal.js"></script>
+  <link rel="stylesheet" type="text/css" href="../css/profile_style.css">
+  <link rel="stylesheet" type="text/css" href="../css/sellerprofile_style.css">
+  <script src="../js/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../css/normalize.css">
+  <script src="../js/modal.js"></script>
+  <script src="../js/custom-file-input.js"></script>
+  <script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
+
 </head>
 <body>
 	<div class="wrapper">
@@ -92,7 +98,7 @@
             <li class="nav_prof">
             	<div>
             		<a href="Profile.php">
-            			<img src="<?php echo $user_image;?>" title="Profile" alt="Profile" height="40" width="40" id="logo2">
+            			<img src="<?php echo $user_image ?>" title="Profile" alt="Profile" height="40" width="40" id="logo2">
             			<label for="username"><?php echo $_SESSION['username'];?></label>
             		</a>
             	</div>
@@ -115,106 +121,119 @@
 		</nav>
 	</header>
 	<div class="container">
-		<a href="Bookshelf.php"><h1 id="bookshelf">Bookshelf</h1></a>
-	<div class=" info_section well well-sm" > 
-	 <div class="dropdown_menu">
-	 	<div class="edit_container">
-			<img src="../images/edit_icon.png" title="Edit" alt="Edit" height="25" width="65" id="edit_icon" onclick="edit_menu()" class=" edit_btn">
-	 	</div>
-		<div id="edit_dropdown" class="edit_dropdown_content">
-			<a href="Edit_book_info.php ?id=<?php echo $book_id_val;?>"> Edit Content</a>
-			<a name="delete" data-toggle="modal" data-target="#myModal4"> Delete Book</a>
-		</div>
-	 </div>
-	
+			<a href="Seller_profile.php?seller=<?php echo $account_id?>"><h1 id="bookshelf">Seller - <?php echo $user_name?> </h1></a>
 
-	 <div class="info">
-		<div class="book_image_container">
-			<img id="book_pic" src="<?php echo $book_image?>" width="200" height="275" />
-		</div>
-		<div class="book_info1" id="book_info1_label">
-			<label for='price' class="info1_items">
-				Php <?php echo $Price ?>
-			</label>
-		</div>
-		<div class="book_info1a">
- 			<label for="category" id="book_info1a_label"> Course Category: </label>
-			<label for='category' class="info1_items"><?php echo $Category ?></label>
-		</div>
-		<div id="book_info2">
-			<label for='title' id="info_label_title"> 
-				<h2> <?php echo $Title ?> </h2>
-			</label>
-			<content class="info_container" id="info_label_title"> 
-				<label> <?php 
-					if ($Edition==''){$Edition="Unknown";} 
-					echo $Edition; ?> Edition
-				</label>
-			</content>
-			<label for='author' id="info_label">Author/s: </label>
-			<content class="info_container"> <?php echo $Authors ?> </content>
-			<label for='description' id="info_label">Description: </label>
-			<content class="info_container"> <?php echo $Description ?> </content>
-			<label for='details' id="info_label">Details: </label>
-			<content class="info_container"> <?php echo $Details ?> </content>
-		</div>
-	 </div>
-
-	</div>	
-	</div>
-
-
-<!-- UPDATE EMAIL MODAL -->
-  <div class="modal fade" id="myModal4" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-      <form method="post" action="<?php $_PHP_SELF; ?>" >
-        <div class="modal-header">
-          <h4 class="modal-title">DELETE A BOOK</h4>
+    <div class="profile_header">
+      <aside>
+        <div>
+          <img id="user_pic" src="<?php echo $imagepath ?>" alt="user photo">
+        </div>  
+        <div id="yrlvl_course">
+          <label id="course"><?php echo  $course?></label>
+          <label><?php echo  $year_level?></label>
         </div>
-        <div class="modal-body">
-			Once "<?php echo $Title ?>" is deleted, it can't be restored. Proceed?
+      </aside>
+      <div id="profile_side">
+        <div id="prof_name">
+          <label id="accountname"><?php echo  $account_name?></label>
+          <label id="username"><?php echo $user_name?></label>
         </div>
-        <div class="modal-footer">
-            <form method="post" action="<?php $_PHP_SELF; ?>" >
-				<input type="submit" value="DELETE" name="delete" class="btn btn-success">
-				<input type="submit" value="CANCEL" class="btn btn-danger">
-			</form>
+        <div id="contact_section">
+          <label>Contact Number/s:</label> 
+<?php       while($row1 = mysqli_fetch_assoc($result1)){ 
+              $contact_number=$row1['contact_number'];?>
+              <div id="multi_inputs">
+                <content><?php echo $contact_number; ?></content>
+              </div>
+<?php    } ?>
         </div>
-        </form>
+        <div id="contact_section">
+          <label>Email/s:</label> 
+<?php       while($row1 = mysqli_fetch_assoc($result2)){ 
+                $email = $row1['email'];?>
+                <div id="multi_inputs">
+                    <content><?php echo  $email; ?></content>
+                </div>
+<?php    } ?>
+        </div>
       </div>
     </div>
-  </div>
+
+<!-- <div class="activity_section">
+  <div class="icon_section">
+      <a href="Public_bookshelf.php?seller=<?php echo $account_id?>" id="bookshelf_section">
+        <div id="image_bookshelf">
+          <img src="../images/bookshelf.png">
+        </div>
+        <div id="label_bookshelf">
+          <img src="../images/label_bookshelf.png">
+        </div>
+      </a>
+  </div> -->
 
 
+
+
+<div class="pub_shelf well well-sm">
+    <h2 id="pub_shelf">Bookshelf</h2>
+
+<?php 
+  if($numbooks > 0){ ?>
+<?php
+      while($row = mysqli_fetch_array($shelf_result)){ ;?>
+
+        <?php 
+            $book_id = $row["book_id"];
+            $sql = "SELECT book_id from cart where book_id='$book_id'";
+            $result_sql = mysqli_query($dbconn, $sql);
+            $num_rows = mysqli_num_rows($result_sql);
+            if($num_rows!=0){
+         ?>
+            <a class="bookshelf_book_container" href="Book_info.php?id=<?php echo $row["book_id"];?>" > 
+        <content class="bookshelf_book">
+          <img height="220" width="150" class="" alt="<?=$row["book_name"];?>" title="<?=$row["book_name"];?>" src="<?php echo $row['book_imagepath']; ?>">
+        <label>Php<?=$row["book_price"];?><br><?=$row["book_name"];?></label>
+        ----SOLD---
+        </content>
+      </a>
+ <?php  } 
+      else{ ?>
+         <a class="bookshelf_book_container" href="Public_book_info.php?id=<?php echo $row["book_id"];?>" > 
+        <content class="bookshelf_book">
+          <img height="220" width="150" class="" alt="<?=$row["book_name"];?>" title="<?=$row["book_name"];?>" src="<?php echo $row['book_imagepath']; ?>">
+        <label>Php<?=$row["book_price"];?><br><?=$row["book_name"];?></label>
+        </content>
+      </a>
+   <?php   }
+
+
+    } }?>
+    
+    </div>
+<!-- </div> -->
+  
+
+<content id="prev_next">
+<?php
+  if($page=='1'){?>
+    <a href=" " id="prev" ><< Prev </a> &nbsp;|&nbsp;
+    <a href="Public_bookshelf.php?page=<?php echo $page+1;?>&amp;seller=<?php echo $account_id;?>" name="page">Next >></a>
+<?php
+  }else{?>
+    <a href="Public_bookshelf.php?page=<?php echo $page-1?>&amp;seller=<?php echo $account_id;?>" name="page"><< Prev</a>  &nbsp;|&nbsp;
+    <a href="Public_bookshelf.php?page=<?php echo $page+1?>&amp;seller=<?php echo $account_id;?>" id="next" name="page">Next</a>
+ <?php }
+?>
+</content>
+
+
+<!-- DON'T -->
+    </div>
 		<footer>
 			<p>A.Y. 2016-2017 Bookshare | &copy;CMSC 128 Lab Sec. 2 |  2016</p>
 		</footer>
 	</div>
+
+
 </body>
 </html>
-
-
-<!-- JAVASCRIPT FOR EDIT DROPDOWN MENU -->
-<script type="text/javascript">
-function edit_menu() {
-    document.getElementById("edit_dropdown").classList.toggle("show");
-}
-
-// Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.edit_btn')) {
-
-    var dropdowns = document.getElementsByClassName("edit_dropdown_content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}
-</script>
