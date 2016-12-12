@@ -42,7 +42,7 @@
 
 
 	if(isset($_POST['add_to_cart'])){
-		$sql = "INSERT INTO cart (seller_id, book_id, buyer_id, date) VALUES ('$seller', '$id', '$buyer_id','$date')";
+		$sql = "INSERT INTO cart (seller_id, book_id, buyer_id, date, status) VALUES ('$seller', '$id', '$buyer_id','$date', '')";
 		$sqlresult = mysqli_query($dbconn,$sql);
 		if($sqlresult){
 			header("Location:Public_book_info.php?id=$id");

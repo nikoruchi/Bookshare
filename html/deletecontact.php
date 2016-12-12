@@ -1,17 +1,19 @@
 <?php
 	include("connect.php");
 	session_start();
+
 ?>
 <?php
 		
-	if(isset($_GET["ID"])){        		
-		$get_id = $_GET["ID"];   	
+	if(isset($_GET["delete_id"])){        		
+		$get_id = $_GET["delete_id"];   	
 	}
             
     $sql = "DELETE FROM account_contacts WHERE contact_id='$get_id'";
             
     if (mysqli_query($dbconn, $sql)) {
-       	header("Location:edit.php");
+    	$success = "contact_delete";
+       	header("Location:edit.php?succ=$success");
 	} else {
 ?>
 		<p>Error: </p>

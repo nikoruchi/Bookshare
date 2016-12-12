@@ -15,13 +15,12 @@
       echo "Not found";
     }
 
-	if(isset($_GET['page'])){
-    	$page=$_GET['page'];
-  	}else{
-  		$page=1;
-  	}
-
-  	$resultperpage = 12;
+  if(isset($_GET['page'])){
+      $page=$_GET['page'];
+    }else{
+      $page=0;
+    }
+    $resultperpage = 12;
 ?>
 
 <!DOCTYPE html>
@@ -115,17 +114,25 @@
 <div class="result_section" >
 
   <?php
-  	if(isset($_GET['key'])){
-  		$key=$_GET['key'];
-  	}else{
-  		$key="title";
-  	} ?>
+    if(isset($_GET['key'])){
+      $key=$_GET['key'];
+    }else{
+      $key="title";
+    } ?>
 
 <?php
-  if($key=="title"){ 	
-   	$start_from = ($page-1)*$resultperpage;
-   	$que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE b.book_id NOT IN (SELECT cart.book_id FROM cart) AND book_name LIKE '%$search%' order by b.book_id asc limit $start_from,".$resultperpage;
-    $result_bookname = mysqli_query($dbconn,$que);?>
+  if($key=="title"){  
+    $start_from = ($page)*$resultperpage;
+    $que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE b.book_id NOT IN (SELECT cart.book_id FROM cart) AND book_name LIKE '%$search%' order by b.book_id asc limit $start_from,".$resultperpage;
+    $result_bookname = mysqli_query($dbconn,$que);
+    $numbooks = mysqli_num_rows($result_bookname);
+
+    $sql="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE b.book_id NOT IN (SELECT cart.book_id FROM cart) AND book_name LIKE '%$search%' order by b.book_id asc";
+    $retval = mysqli_query($dbconn, $sql);
+    $totalbooks = mysqli_num_rows($retval);
+    $totalpages = ceil($totalbooks/$resultperpage);
+?>
+
 <h2 id="res_label"> Filter by <?=$key?> </h2>
 <?php
   if(mysqli_num_rows($result_bookname)>0){ ?>
@@ -133,8 +140,17 @@
 <div id="title" class="sorted well well-sm">
 <?php   
       while($row=mysqli_fetch_assoc($result_bookname)){ 
-          $id = $row['book_id'];?>
-          <a class="bookshelf_book_container" href="Public_book_info.php?id=<?=$row['book_id']?>">
+          $book_id = $row['book_id'];?>
+          <?php
+            $sql = "SELECT account_id from books where book_id='$book_id' limit 1";
+            $result_sql = mysqli_query($dbconn, $sql);
+            $row_account = mysqli_fetch_assoc($result_sql);
+            $owner_id = $row_account["account_id"];
+          ?>
+          <a class="bookshelf_book_container" 
+          href=<?php if($owner_id==$id){?>"Book_info.php?id=<?=$book_id?>"
+          <?php } else{ ?>
+            "Public_book_info.php?id=<?=$book_id?>" <?php }?>>
             <content class="bookshelf_book">
               <img title="<?=$row['book_name']?>" alt="<?=$row['book_name']?>" height="225" width="150" class="" src="<?php echo $row['book_imagepath']; ?>">
               <label>Php<?=$row['book_price'];?></label>
@@ -145,28 +161,51 @@
 </div>
 
 <content id="res_prev_next">
-	<a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=title" id="prev" ><< Prev </a> &nbsp;|&nbsp;
-	<a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=title" id="next" >Next >> </a>
+  <?php if($page=='0' and $totalpages!='1'){?>
+    <a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=title" id="next" >Next >> </a>
+  <?php }else if($page==$totalpages-1 and $totalpages!='1'){?>
+    <a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=title" id="prev" ><< Prev </a>
+  <?php }else if($totalpages=='1'){ ?>
+    <p></p>
+  <?php }else{?>
+    <a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=title" id="prev" ><< Prev </a> &nbsp;|&nbsp;
+    <a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=title" id="next" >Next >> </a>
+  <?php }?>
 </content>
 
 <?php    } else {?>
-    		  <p> No result for keyword "<?php echo $search;?>". </p>
+          <p> No result for keyword "<?php echo $search;?>". </p>
 <?php    }
   }
 
   elseif($key=="author"){
-  	$start_from = ($page-1)*$resultperpage;
-  	$que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE b.book_id NOT IN (SELECT cart.book_id FROM cart) AND book_author LIKE '%$search%' order by b.book_id asc limit $start_from,".$resultperpage;
-    $result_author = mysqli_query($dbconn,$que);?>
+    $start_from = ($page)*$resultperpage;
+    $que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE b.book_id NOT IN (SELECT cart.book_id FROM cart) AND book_author LIKE '%$search%' order by b.book_id asc limit $start_from,".$resultperpage;
+    $result_author = mysqli_query($dbconn,$que);
+    $numauthors = mysqli_num_rows($result_author);
+
+    $sql = "SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE b.book_id NOT IN (SELECT cart.book_id FROM cart) AND book_author LIKE '%$search%' order by b.book_id asc";
+    $retval = mysqli_query($dbconn, $sql);
+    $totalbooks = mysqli_num_rows($retval);
+    $totalpages = ceil($totalbooks/$resultperpage);?>
 <h2 id="res_label"> Filter by <?=$key?> </h2>
 <?php    
-    if(mysqli_num_rows($result_author)>0){ ?>
+    if(mysqli_num_rows($result_author)){ ?>
 
 <div id="author" class="sorted well well-sm">
 <?php   
       while($row1=mysqli_fetch_assoc($result_author)){ 
-          $id = $row1['book_id'];?>
-          <a class="bookshelf_book_container" href="Public_book_info.php?id=<?=$id?>">
+         $book_id = $row1['book_id'];?>
+          <?php
+            $sql = "SELECT account_id from books where book_id='$book_id' limit 1";
+            $result_sql = mysqli_query($dbconn, $sql);
+            $row_account = mysqli_fetch_assoc($result_sql);
+            $owner_id = $row_account["account_id"];
+          ?>
+          <a class="bookshelf_book_container" 
+          href=<?php if($owner_id==$id){?>"Book_info.php?id=<?=$book_id?>"
+          <?php } else{ ?>
+            "Public_book_info.php?id=<?=$book_id?>" <?php }?>>
             <content class="bookshelf_book">
               <img title="<?=$row1['book_name']?>" alt="<?=$row1['book_name']?>" height="225" width="150" class="" src="<?php echo $row1['book_imagepath']; ?>">
               <label>Php<?=$row1["book_price"];?></label>
@@ -176,20 +215,35 @@
 </div>    
 
 <content id="res_prev_next">
-	<a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=author" id="prev" ><< Prev </a> &nbsp;|&nbsp;
-	<a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=author" id="next" >Next >> </a>
+  <?php if($page=='0' and $totalpages!='1'){?>
+    <a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=author" id="next" >Next >> </a>
+  <?php }else if($page==$totalpages-1 and $totalpages!='1'){?>
+    <a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=title" id="prev" ><< Prev </a>
+  <?php }else if($totalpages=='1'){ ?>
+    <p></p>
+  <?php }else{?>  
+    <a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=author" id="prev" ><< Prev </a> &nbsp;|&nbsp;
+    <a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=author" id="next" >Next >> </a>
+  <?php }?>
 </content>
 
 
 <?php    } else {?>
-    		  <p> No result for keyword "<?php echo $search;?>". </p>
+          <p> No result for keyword "<?php echo $search;?>". </p>
 <?php    } 
   }
 
   elseif($key=="subject"){
-    $start_from = ($page-1)*$resultperpage;
-  	$que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE b.book_id NOT IN (SELECT cart.book_id FROM cart) AND book_subject LIKE '%$search%' order by b.book_id asc limit $start_from,".$resultperpage;
-    $result_subject = mysqli_query($dbconn,$que);?>
+    $start_from = ($page)*$resultperpage;
+    $que="SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE b.book_id NOT IN (SELECT cart.book_id FROM cart) AND book_subject LIKE '%$search%' order by b.book_id asc limit $start_from,".$resultperpage;
+    $result_subject = mysqli_query($dbconn,$que);
+    $numsubjects = mysqli_num_rows($result_subject);
+
+    $sql = "SELECT * FROM book_info bi JOIN books b ON bi.book_id=b.book_id WHERE b.book_id NOT IN (SELECT cart.book_id FROM cart) AND book_subject LIKE '%$search%' order by b.book_id asc";
+    $retval = mysqli_query($dbconn, $sql);
+    $totalbooks = mysqli_num_rows($retval);
+    $totalpages = ceil($totalbooks/$resultperpage);?>
+
 <h2 id="res_label"> Filter by <?=$key?> </h2>
 <?php
     if(mysqli_num_rows($result_subject)>0){ ?>
@@ -197,8 +251,17 @@
 <div  id="subject" class="sorted well well-sm">
 <?php
       while($row2=mysqli_fetch_assoc($result_subject)){ 
-          $id = $row2['book_id'];?>
-          <a class="bookshelf_book_container" href="Public_book_info.php?id=<?=$id?>">
+          $book_id = $row2['book_id'];?>
+          <?php
+            $sql = "SELECT account_id from books where book_id='$book_id' limit 1";
+            $result_sql = mysqli_query($dbconn, $sql);
+            $row_account = mysqli_fetch_assoc($result_sql);
+            $owner_id = $row_account["account_id"];
+          ?>
+          <a class="bookshelf_book_container" 
+          href=<?php if($owner_id==$id){?>"Book_info.php?id=<?=$book_id?>"
+          <?php } else{ ?>
+            "Public_book_info.php?id=<?=$book_id?>" <?php }?>>
             <content class="bookshelf_book">
               <img title="<?=$row2['book_name']?>" alt="<?=$row2['book_name']?>" height="225" width="150" class="" src="<?php echo $row2['book_imagepath']; ?>">
               <label>Php<?=$row2["book_price"];?></label>
@@ -208,19 +271,34 @@
 </div>
 
 <content id="res_prev_next">
-	<a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=subject" id="prev" ><< Prev </a> &nbsp;|&nbsp;
-	<a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=subject" id="next" >Next >> </a>
+  <?php if($page=='0' and $totalpages!='1'){?>
+    <a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=subject" id="next" >Next >> </a>
+  <?php }else if($page==$totalpages-1 and $totalpages!='1'){?>
+    <a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=subject" id="prev" ><< Prev </a>
+  <?php }else if($totalpages=='1'){ ?>
+    <p></p>
+  <?php }else{?>  
+    <a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=subject" id="prev" ><< Prev </a> &nbsp;|&nbsp;
+    <a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=subject" id="next" >Next >> </a>
+  <?php }?>
 </content>
 
 <?php    } else {?>
-    		  <p> No result for keyword "<?php echo $search;?>". </p>
+          <p> No result for keyword "<?php echo $search;?>". </p>
 <?php    } 
   }
 
   elseif($key=="user"){
-  	$start_from = ($page-1)*$resultperpage;
-  	$que="SELECT * FROM account WHERE account_name LIKE '%$search%' and account_id != '$id' order by account_id asc limit $start_from,".$resultperpage;
-    $result_account = mysqli_query($dbconn,$que);?>
+    $start_from = ($page)*$resultperpage;
+    $que="SELECT * FROM account WHERE account_name LIKE '%$search%' and account_id!= '$id' order by account_id asc limit $start_from,".$resultperpage;
+    $result_account = mysqli_query($dbconn,$que);
+    $numaccounts = mysqli_num_rows($result_account);
+    
+    $sql="SELECT * FROM account WHERE account_name LIKE '%$search%' and account_id != '$id' order by account_id asc";
+    $retval = mysqli_query($dbconn, $sql);
+    $totalaccounts = mysqli_num_rows($retval);
+    $totalpages = ceil($totalaccounts/$resultperpage);?>
+
 <h2 id="res_label"> Filter by <?=$key?> </h2>
 <?php
     if(mysqli_num_rows($result_account)>0){ ?>
@@ -235,16 +313,24 @@
           <label for='seller' id="no_line"><a href="<?php echo "Seller_profile.php?seller=".$row3["account_id"];?>"><?php echo $row3["account_name"] ?></a></label>
           <label for='course_seller' id="no_line2"><?php echo $course?></label>
         </div>
-<?php } ?>    	
+<?php } ?>      
 </div>
 
 <content id="res_prev_next">
-	<a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=user" id="prev" ><< Prev </a> &nbsp;|&nbsp;
-	<a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=user" id="next" >Next >> </a>
+  <?php if($page=='0' and $totalpages!='1'){?>
+    <a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=user" id="next" >Next >> </a>
+  <?php }else if($page==$totalpages-1 and $totalpages!='1'){?>
+    <a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=user" id="prev" ><< Prev </a>
+  <?php }else if($totalpages=='1'){ ?>
+    <p></p>
+  <?php }else{?> 
+    <a href="result.php?page=<?php echo $page-1?>&amp;ID=<?php echo $search?>&amp;key=user" id="prev" ><< Prev </a> &nbsp;|&nbsp;
+    <a href="result.php?page=<?php echo $page+1?>&amp;ID=<?php echo $search?>&amp;key=user" id="next" >Next >> </a>
+  <?php }?>
 </content>
 
 <?php    } else {?>
-    		  <p> No result for keyword "<?php echo $search;?>". </p>
+          <p> No result for keyword "<?php echo $search;?>". </p>
 <?php    }
    } ?>
 

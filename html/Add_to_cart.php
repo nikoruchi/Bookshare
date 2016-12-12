@@ -31,7 +31,7 @@
 	if(mysqli_num_rows($sqle)>0){
 		msg("you already add this book in your cart"); 
 	} else {
-		$sql = "INSERT INTO cart (seller_id, book_id, buyer_id, date) VALUES ('$seller', '$id', '$buyer_id','$date')";
+		$sql = "INSERT INTO cart (seller_id, book_id, buyer_id, date, status) VALUES ('$seller', '$id', '$buyer_id','$date', '')";
 		$sqlresult = mysqli_query($dbconn,$sql);
 		if($sqlresult){
 			$query = "DELETE FROM bookmarks WHERE book_id='$id' AND buyer_id='$buyer_id'";
@@ -42,6 +42,8 @@
 			}
 		} 
 	}
+
+	header("Location:View_bookmarks.php");
 	
 	function msg($mess){?>    
     <p><?=$mess;?></p>

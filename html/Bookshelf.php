@@ -5,16 +5,17 @@
 
     $id = $_SESSION['buyer_id'];
     $user_query= "SELECT * from account where account_id='$id'";
-    $resultperpage = 18;
+    //datatable = 'books';
     $user_result=mysqli_query($dbconn, $user_query);
     $row_session = mysqli_fetch_assoc($user_result);
     $user_image = $row_session['account_imagepath'];
+    $resultperpage = 12;
 
-    $resultperpage = 6;
     $sql = "SELECT * from books as B join account as A on B.account_id=A.account_id WHERE B.account_id='$id' order by book_id";
     $retval = mysqli_query($dbconn, $sql);
     $totalbooks = mysqli_num_rows($retval);
     $totalpages = ceil($totalbooks/$resultperpage);  
+
 ?>
 
 <?php
@@ -73,7 +74,7 @@
                 </a>
               </div>
             </li>
-           <li class="nav_cart">
+            <li class="nav_cart">
               <div>
                 <span id="notification_count"></span>
                 <a href="Shopping_list.php" id="notificationLink" onclick = "return getNotification()">
@@ -118,11 +119,24 @@
 <?php 
   if($numbooks > 0){ ?>
 <?php
-      while($row = mysqli_fetch_assoc($shelf_result)){ ;?>
+      while($row = mysqli_fetch_assoc($shelf_result)){ ?>
+
+       <?php 
+            $book_id = $row["book_id"];
+            $sql = "SELECT book_id from cart where book_id='$book_id'";
+            $result_sql = mysqli_query($dbconn, $sql);
+            $num_rows = mysqli_num_rows($result_sql);
+
+         ?> 
             <a class="bookshelf_book_container" href="Book_info.php?id=<?php echo $row["book_id"];?>" >
         <content class="bookshelf_book">
             <img  height="225" width="150" class="" alt="<?=$row["book_name"];?>" title="<?=$row["book_name"];?>" src="<?php echo $row['book_imagepath']; ?>">
             <label>Php<?=$row["book_price"];?></label>
+              <span id="error">
+                <?php
+                if($num_rows!=0){
+                  echo "---SOLD---";}?>
+              </span>
         </content>
       </a>
  <?php  } 
@@ -130,7 +144,7 @@
 
 </div>
 
-<content id="prev_next">
+   <content id="prev_next">
 
 <?php  if($page==0){?>
     <a href="Bookshelf.php?page=<?php echo $page+1?>" name="page">Next >></a>
@@ -138,7 +152,7 @@
 <?php  }else if($page==$totalpages-1){?>
     <a href="Bookshelf.php?page=<?php echo $page-1?>" name="page"><< Prev</a>
 
-<?php }else if($page=='0' and $totalpages=='0'){ ?>
+<?php }else if($page=='0' and $totalpages=='1'){ ?>
       <p></p>
 
 <?php  }else{?>
@@ -146,7 +160,7 @@
     <a href="Bookshelf.php?page=<?php echo $page+1?>" id="next" name="page">Next >></a>
  <?php }
 ?>
-</content>
+   </content>
 
 <!-- DON'T -->
   </div>  

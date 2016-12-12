@@ -236,15 +236,15 @@
 			</content>
 			<content class="col-xs-2">
 				<label for='edition' id="info_label">Edition: </label>
-				<input type="text" name="edition" class="form-control" placeholder="1st, 2nd, etc." value="<?= $prev_edition?>">
+				<input type="number" min='1' name="edition" class="form-control" placeholder="1st, 2nd, etc.">
 			</content>
 			<content class=" extra_details col-xs-2">
 				<label id="info_label" for='quality'>Quality: </label>
-				<input type="text" name="quality" class="form-control" placeholder="0-100%" value="<?= $prev_quality?>">
+				<input type="number" min="1" max="100" name="quality" class="form-control" placeholder="0-100%" value="<?= $prev_quality?>">
 			</content>
 			<content class=" extra_details col-xs-4">
 				<label  id="info_label" for='pages'>Pages: </label>
-				<input type="text" name="pages" class="form-control" placeholder="# of pages" value="<?= $prev_pages?>">
+				<input type="number" min='1' name="pages" class="form-control" placeholder="# of pages">
 			</content>
 			<content class="col-xs-10">
 				<label for='author' id="info_label" >Author/s: </label>

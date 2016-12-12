@@ -23,7 +23,8 @@
 			$insert1 = "UPDATE account_contacts SET contact_number='$contactz' WHERE contact_id='$get_id'";
 			$insertresult1 = mysqli_query($dbconn, $insert1);			
 			if($insertresult1){
-				header("Location:edit.php");
+        $success = "contact";
+				header("Location:edit.php?succ=$success");
 			}
 
 		}

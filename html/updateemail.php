@@ -25,7 +25,8 @@
 		$insert1 = "UPDATE account_emails SET email='$emailz' WHERE email_id='$get_id'";
 		$insertresult1 = mysqli_query($dbconn, $insert1);			
 		if($insertresult1){
-			header("Location:edit.php");
+      $success = "email";
+			header("Location:edit.php?succ=$success");
 		}
 
 	}

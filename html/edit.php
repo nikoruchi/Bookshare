@@ -20,8 +20,19 @@
       $result2 = mysqli_query($dbconn, $query2);
       $msg=false;
       $msgc=false;
-  
+      $query1 ="SELECT * FROM account_contacts where account_id='$account_id'";
+      $result1 = mysqli_query($dbconn, $query1);
+      $num_rows = mysqli_num_rows($result1);
+      $mess = "";
     ?>
+  <?php 
+    if (isset($_GET['delete_id'])){
+      header("Location:deletecontact.php");
+    }
+    if(isset($_GET['delete_email'])){
+      header("Location:deleteemail.php");
+    }
+  ?>
 
 <?php 
 
@@ -53,7 +64,16 @@
         if(mysqli_num_rows($countresult1)>2){
           $msgc=true;
           // msg("Can't insert new contact number. Your contact number should be less than or equal to 3!");
-        } else {
+        }
+         else if(!preg_match('/^[\+639|09]([0-9]{9}/',$contact)) {
+          if($msgc==true){
+            $msgc;
+          }
+          else{
+            $msgc = true;
+          }
+         }
+         else {
           $insert1 = "INSERT INTO account_contacts (account_id, contact_number) VALUES ('$account_id','$contact')";
           $insertresult1 = mysqli_query($dbconn, $insert1);
            // $msgc=false;
@@ -82,6 +102,7 @@
         if($user_name!=$account_name){
           $_SESSION['username']=$user_name;
         }
+        $mess = "Changes Saved! ";
         header("Refresh:0");
       }
   }
@@ -170,6 +191,8 @@
 	</header>
 	<div class="container">
 	   <a href="Settings.php"><h1 id="bookshelf">Account Settings</h1></a>
+      <span id = "error"><p style="color:green; font-size:25px; padding:10px;"><?php echo $mess; ?></p></span>
+
       <div class="edit_set_section well well-sm " >
 
             <div id="edit_data">
@@ -181,45 +204,45 @@
                     <label id="user">Username:</label>
                     <input class="form-control-set" type="text" name="user_name" value="<?php echo $user_name; ?>">                    
                 </content>
-                <content class="col-xs-set">
+                 <content class="col-xs-set">
                     <label id="year">Year:</label>
                     <select name="yearlevel" id="yearlevel" class="form-control-set">     
                       <option value=""> </option>
-                      <option value="1st_year"> 1st Year </option>
-                      <option value="2nd_year"> 2nd Year </option>          
-                      <option value="3rd_year"> 3rd Year </option>
-                      <option value="4th_year"> 4th Year </option>
-                      <option value="5th_year"> 5th Year </option>
-                      <option value="nth_year"> nth Year </option>
-                      <option value="masters_1"> Master I </option>
-                      <option value="masters_2"> Master II </option>
-                      <option value="doctors"> Doctorate </option>
+                      <option value="1st_year" <?php if (isset($year_level) && $year_level=="1st_year") echo "selected";?>> 1st Year </option>
+                      <option value="2nd_year" <?php if (isset($year_level) && $year_level=="2nd_year") echo "selected";?>> 2nd Year </option>          
+                      <option value="3rd_year" <?php if (isset($year_level) && $year_level=="3rd_year") echo "selected";?>> 3rd Year </option>
+                      <option value="4th_year" <?php if (isset($year_level) && $year_level=="4th_year") echo "selected";?>> 4th Year </option>
+                      <option value="5th_year" <?php if (isset($year_level) && $year_level=="5th_year") echo "selected";?>> 5th Year </option>
+                      <option value="nth_year" <?php if (isset($year_level) && $year_level=="nth_year") echo "selected";?>> nth Year </option>
+                      <option value="masters_1" <?php if (isset($year_level) && $year_level=="masters_1") echo "selected";?>> Master I </option>
+                      <option value="masters_2" <?php if (isset($year_level) && $year_level=="master_2") echo "selected";?>> Master II </option>
+                      <option value="doctors" <?php if (isset($year_level) && $year_level=="Doctorate") echo "selected";?>> Doctorate </option>
                     </select>
                 </content>
                 <content class="col-xs-set">
                     <label id="year">Course:</label>
                     <select name="course1" id="course1" class="form-control-set">      
                       <option value="">  </option>
-                      <option value="Accountancy"> Accountancy </option>
-                      <option value="Applied Mathematics"> Applied Mathematics </option>          
-                      <option value="Biology"> Biology </option>
-                      <option value="Business Administration"> Business Administration </option>
-                      <option value="Chemical Engineering"> Chemical Engineering </option>
-                      <option value="Chemistry"> Chemistry </option>
-                      <option value="Communication And Media Studies"> Communication and Media Studies </option>
-                      <option value="Community Development"> Community Development </option>
-                      <option value="Computer Science"> Computer Science </option>
-                      <option value="Economics"> Economics </option>
-                      <option value="Fisheries"> Fisheries </option>
-                      <option value="Food Technology"> Food Technology </option>
-                      <option value="History"> History </option>
-                      <option value="Literature"> Literature </option>
-                      <option value="Management"> Management </option>
-                      <option value="Political Science"> Political Science </option>
-                      <option value="Psychology"> Psychology </option>
-                      <option value="Public Health"> Public Health </option>
-                      <option value="Sociology"> Sociology </option>
-                      <option value="Statistics"> Statistics </option>
+                      <option value="Accountancy" <?php if (isset($course) && $course=="Accountancy") echo "selected";?>> Accountancy </option>
+                      <option value="Applied Mathematics" <?php if (isset($course) && $course=="Applied Mathematics") echo "selected";?>> Applied Mathematics </option>         
+                      <option value="Biology" <?php if (isset($course) && $course=="Biology") echo "selected";?>> Biology </option>
+                      <option value="Business Administration" <?php if (isset($course) && $course=="Business Administration") echo "selected";?>> Business Administration </option>
+                      <option value="Chemical Engineering" <?php if (isset($course) && $course=="Chemical Engineering") echo "selected";?>> Chemical Engineering </option>
+                      <option value="Chemistry" <?php if (isset($course) && $course=="Chemistry") echo "selected";?>> Chemistry </option>
+                      <option value="Communication And Media Studies" <?php if (isset($course) && $course=="Communication And Media Studies") echo "selected";?>> Communication and Media Studies </option>
+                      <option value="Community Development" <?php if (isset($course) && $course=="Community Development") echo "selected";?>> Community Development </option>
+                      <option value="Computer Science" <?php if (isset($course) && $course=="Computer Science") echo "selected";?>> Computer Science </option>
+                      <option value="Economics" <?php if (isset($course) && $course=="Economics") echo "selected";?>> Economics </option>
+                      <option value="Fisheries" <?php if (isset($course) && $course=="Fisheries") echo "selected";?>> Fisheries </option>
+                      <option value="Food Technology" <?php if (isset($course) && $course=="Food Technology") echo "selected";?>> Food Technology </option>
+                      <option value="History" <?php if (isset($course) && $course=="History") echo "selected";?>> History </option>
+                      <option value="Literature" <?php if (isset($course) && $course=="Literature") echo "selected";?>> Literature </option>
+                      <option value="Management" <?php if (isset($course) && $course=="Management") echo "selected";?>> Management </option>
+                      <option value="Political Science" <?php if (isset($course) && $course=="Political Science") echo "selected";?>> Political Science </option>
+                      <option value="Psychology" <?php if (isset($course) && $course=="Psychology") echo "selected";?>> Psychology </option>
+                      <option value="Public Health" <?php if (isset($course) && $course=="Public Health") echo "selected";?>> Public Health </option>
+                      <option value="Sociology" <?php if (isset($course) && $course=="Sociology") echo "selected";?>> Sociology </option>
+                      <option value="Statistics" <?php if (isset($course) && $course=="Statistics") echo "selected";?>> Statistics </option>
                     </select>
                 </content>
                 <content class="col-xs-set" id="edit-btn-container">
@@ -236,41 +259,71 @@
             <section id="error">
             <?php 
               if($msgc==true){?>    
-                <p>Can't insert new contact number. Your contact numbers should be less than or equal to 3!</p>
+                <p>"Can't insert new contact number. Your contact number should match the given pattern and could only have a maximum of 3 contact numbers"</p>
             <?php } 
               if($msg==true){?>    
-                <p>Can't insert new email. Your email should be less than or equal to 3!</p>
+                <p>Can't insert new email. You could only have a maximum of 3 emails.!</p>
             <?php } 
               elseif(!($msg==true)||!($msgc==true)){?>
                 <p><br></p>
-            <?php } ?>
+            <?php } 
+               elseif(!($msg==true)||!($msgc==true)){?>
+                <p><br></p>
+            <?php }
+
+              if(isset($_GET['succ'])){
+                $success = $_GET['succ'];
+                  if($success == "contact"){?>
+                   <p style = "color:green;">Your contact number was successfully updated</p>
+                  <?php }
+
+                   elseif ($success == "email") {?>
+                      <p style = "color:green;">Your email was successfully updated</p>
+                    <?php }
+                    elseif($success=="email_delete"){?>
+                        <p style = "color:green;">Your email was successfully deleted</p>
+                    <?php }
+                    elseif($success=="contact_delete"){?>
+                        <p style = "color:green;">Your email was successfully deleted</p>
+                    <?php }
+                    } 
+                
+              
+                ?>
+
+              
+
             </section>
 
             <div class="add_btn_container">
                 <button type="button" class="btn btn-info btn-primary" name="add" data-toggle="modal" data-target="#myModal">+Add</button>
             </div>
                 <label id="number">Contact Number/s:</label> 
-       <?php        while($row1 = mysqli_fetch_assoc($result1)){ 
+
+       <?php      
+         
+         
+         while($row1 = mysqli_fetch_array($result1)){ 
                         $contact_number=$row1['contact_number'];?>
-                        <div id="multi_inputs">
+                        <div class="list" id="multi_inputs">
                             <content><?php echo $contact_number; ?></content> 
                             <a id="action" style="color:green;" class="btn-link" name="update" href="updatecontact.php?ID=<?php echo $row1['contact_id']?>">Update</a>  
-                            <a id="action" style="color:red;" class="btn-link" href="deletecontact.php?ID=<?php echo $row1['contact_id']?>">Delete</a>
+                            <a  style="color:red;" href="javascript:delete_id(<?php echo $row1['contact_id']; ?>)">Delete</a>
                         </div>
-       <?php    } ?>
+       <?php    } 
+       ?>
 
-                <label id="email">Email/s:</label> 
+             <label id="email">Email/s:</label> 
        <?php        while($row1 = mysqli_fetch_assoc($result2)){ 
                         $email = $row1['email'];?>
                             <div id="multi_inputs">
                                 <content><?php echo  $email; ?></content>
                                 <a id="action" style="color:green;" class="btn-link" href="updateemail.php?ID=<?php echo $row1['email_id']?>">Update</a>
-                                <a id="action" style="color:red;" class="btn-link" href="deleteemail.php?ID=<?php echo $row1['email_id']?>">Delete</a> 
+                                <a style="color:red;" class="btn-link" href="javascript:delete_email(<?php echo $row1['email_id']; ?>)">Delete</a> 
                             </div>
        <?php    } ?>
             </div>
        </div>
-
 
 
 <!-- MODAAAAAAAAAAAAAAAAALS -->
@@ -287,11 +340,11 @@
              <span class="box">
                 <div> 
                    <label id="modal_label">Contact Number:</label>
-                   <input class="form-control-set" type="text" name="contact_number">
+                   <input class="form-control-set" type="number" name="contact_number">
                 </div>
                 <div>
                    <label id="modal_label">Email:</label>
-                   <input class="form-control-set" type="text" name="email">
+                   <input type="email" class="form-control-set" name="email" placeholder="admin@gmail.com">
                 </div>
              </span>
         </div>
@@ -308,6 +361,29 @@
 
     <!-- DONT -->
     </div>
+
+  
+
+  
+
+   <script type="text/javascript">
+      function delete_id(id)
+      {
+        if(confirm('Sure To Remove This Contact?'))
+        {
+          window.location.href='deletecontact.php?delete_id='+id;
+        }
+      }
+  </script>
+  <script type="text/javascript">
+      function delete_email(id)
+      {
+        if(confirm('Sure To Remove This Email?'))
+        {
+          window.location.href='deleteemail.php?delete_email='+id;
+        }
+      }
+  </script>
 		<footer>
 			<p>A.Y. 2016-2017 Bookshare | &copy;CMSC 128 Lab Sec. 2 |  2016</p>
 		</footer>
@@ -370,4 +446,6 @@ function waitForMsg(){
 $(document).ready(function(){
   waitForMsg();
 });
+
 </script>
+

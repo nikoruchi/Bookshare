@@ -181,21 +181,24 @@
 			</label>
 			<content class="info_container" id="info_label_title"> 
 				<label> <?php 
-					if ($Edition=='' || $Edition<1){$Edition="Unknown";}
+					if ($Edition==''){$Edition="Unknown";}
           // =================================================>>>>>
 
               
               $temp = $Edition%100;
 
             if ($temp=='11' || $temp=='12' || $temp=='13' || $temp=='14' || $temp=='15' || $temp=='16' || $temp=='17' || $temp=='18' || $temp=='19') { $Edition = $Edition."th";
-            }else{
+            }else if ($temp>0){
               $temp = $Edition%10;
-                
-              if($temp=='0'){  $Edition = $Edition." ";}
+              
+              if($temp=='0'){  $Edition = $Edition."th";}
               if($temp=='1'){ $Edition = $Edition."st";}
               if($temp=='2'){ $Edition = $Edition."nd";}
               if($temp=='3'){ $Edition = $Edition."rd";}
               if($temp=='4' || $temp=='5' || $temp=='6' || $temp=='7' || $temp=='8' || $temp=='9'){$Edition = $Edition."th";}
+            }
+            else{
+              if($temp ==''){$Edition = $Edition." ";}
             }
 
           // =================================================>>>>>

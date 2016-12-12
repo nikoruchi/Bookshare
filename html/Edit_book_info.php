@@ -55,15 +55,34 @@
 		}
 
 		// $pattern = preg_replace('/[^0-9]/',' ', $Edition);
-		$pattern = preg_match_all('/[0-9]/', $Edition);
-		if (!($pattern)){
-			$prompt="**Edition should contain number only.";
-		}        
-
-
-        if ($pattern){ }
-       	else{$prompt = "**Wrong Edition input.";}
 		
+		//$pattern = preg_match('/[^0-9]/', $Edition);
+		
+		// if ($pattern==false){
+		// 	echo "**Edition should contain number only.";
+		// }
+
+		// $checker = is_numeric($Edition);
+
+		// echo $checker;
+
+		// if($checker==true){
+		// 	$prompt = "lol";
+		// }
+
+		// $checker=true;
+
+		// if(!preg_match('/^[0-9]+(\\.[0-9]+)?$/', $Edition)){
+		// 	$prompt = "ABCD";
+		// }
+
+        // if (!($pattern){ }
+       	// else{$prompt = "**Wrong Edition input.";}
+		
+		// if(!(preg_match('/[^0-9]/', $Edition))){
+		// 	$prompt="Puli na to";
+		// }
+
 	  	if ($prompt=='') {
 			$info_update = "UPDATE book_info BI, books B SET B.book_price= '$price', B.book_name= '$title', BI.book_author= '$authors', B.book_desc= '$description', BI.book_details= '$details', B.book_edition='$edition', BI.book_subject='$category', BI.book_quality='$quality' where B.book_id=BI.book_id and BI.book_id=$book_id";
 			$update_result=mysqli_query( $dbconn, $info_update);
@@ -76,7 +95,6 @@
 	    	else{
 	    		echo "ERR";
 	    	}
-
 		}
 	}
 

@@ -3,6 +3,7 @@ include("connect.php");
 session_start();
 
 $picpath = "user_pic.jpg";
+$fullname=$user_name=$contactno=$e_mail="";
 ?>
 <!DOCTYPE html5>
 <html>
@@ -31,7 +32,7 @@ $picpath = "user_pic.jpg";
 		<?php
 			$empty = "";
 
-			$checkuser=$checkpass=$checkretype=false;
+			$checkuser=$checkpass=$checkretype=$checkcontact=$checkname=false;
 			
 			if(isset($_POST['submit'])) {
 				$name = $_POST["name"];
@@ -44,14 +45,35 @@ $picpath = "user_pic.jpg";
 				$pass1 = $_POST["newpassword1"];
 
 				if($name == null || $uname == null || $email == null || $num == null || $level == null || $course == null || $pass == null || $pass1 == null){ 		
-			        msg("*You must fill out all the fields.");			         	
+			        msg("*You must fill out all the fields.");
+			        $fullname=$_POST["name"];
+					$user_name=$_POST["newuser"];
+					$contactno=$_POST["num"];
+					$e_mail=$_POST["email"];			         	
 				}else{
 			        $sql = "SELECT * FROM account WHERE BINARY username LIKE '$uname'";
 			        $re = mysqli_query($dbconn, $sql);
 			        if(mysqli_num_rows($re)>0){
 						msg("*Sorry Username " .$uname." has already been taken!");
 					}else{
-						$checkuser=true;
+						if(!preg_match('/([A-Za-z0-9_\-]+){6,10}/', $uname)){
+							msg("*Username must be 6-10 characters long and must be valid.");
+						}
+						else{
+							$checkuser=true;
+						}
+			        }
+			         if(!preg_match('/((^[A-Z])([a-z]\s)*)+/', $name)){
+			        	msg("*Name should be valid.");
+			        }
+			        else{
+			        	$checkname=true;
+			        }
+			        if(!preg_match('/^[\+639|09]([0-9]{9})/', $num)){
+			        	msg("*Follow contact number pattern.");
+			        }
+			        else{
+			        	$checkcontact=true;
 			        }
 			        if(!preg_match('/(?=.*\d)[A-Za-z\d]{6,}/', $pass) || !preg_match('/(?=.*\d)[A-Za-z\d]{6,}/', $pass1)){
 		        		msg("*Password must at least be 6 characters long and should contain at least 1 integer.");
@@ -65,7 +87,7 @@ $picpath = "user_pic.jpg";
 	        		else{
 						$checkretype=true;
 	        		}
-	        		if($checkuser&&$checkpass&&$checkretype){
+	        		if($checkuser&&$checkpass&&$checkretype&&$checkcontact&&$checkname){
 						$query = "INSERT INTO account (account_name, username, password, year_level, course) VALUES ('$name', '$uname', MD5('$pass'), '$level', '$course')";
 						if(mysqli_query($dbconn, $query)){
 							$que = "SELECT * FROM account WHERE BINARY username LIKE '$uname'";
@@ -128,6 +150,12 @@ $picpath = "user_pic.jpg";
 						}
 							
 					}
+					else{
+						$fullname=$_POST["name"];
+						$user_name=$_POST["newuser"];
+						$contactno=$_POST["num"];
+						$e_mail=$_POST["email"];
+					}
 				}
 			} else {
 				msg($empty);
@@ -146,59 +174,59 @@ $picpath = "user_pic.jpg";
 		<div id="input_types">
 			<span id="input" class="col-xs-4">
 				<label for="name">Full Name: </label>
-				<input type="text" id="name" name="name" class="form-control">
+				<input type="text" id="name" name="name" class="form-control" value="<?php echo $fullname ?>">
 			</span>
 			<span id="input" class="col-xs-4">
 				<label for="Username">Username: </label> 
-				<input type="text" id="newuser" name="newuser" class="form-control">
+				<input type="text" id="newuser" name="newuser" class="form-control" value="<?php echo $user_name ?>">
 			</span>
 			<span id="input" class="col-xs-4">
 				<label for="email">E-mail: </label>
-				<input type="email" id="email" name="email" class="form-control">
+				<input type="email" id="email" name="email" class="form-control" value="<?php echo $e_mail ?>">
 			</span>
 			<span id="input" class="col-xs-4">
 				<label for="num">Contact Number: </label>
-				<input type="text" id="num" name="num" class="form-control">
+				<input type="text" id="num" name="num" class="form-control" value="<?php echo $contactno ?>">
 			</span>
 			<span id="input" class="col-xs-4">	
 				<label for="year_level">Year Level: </label>  <!--- Dropdown dapat ang YEAR LEVEL and COURSE -->
 				<select name="year_level" id="year_level" class="form-control">			
 					<option value=" "> </option>
-					<option value="1st_year"> 1st Year </option>
-					<option value="2nd_year"> 2nd Year </option>			   	
-					<option value="3rd_year"> 3rd Year </option>
-					<option value="4th_year"> 4th Year </option>
-					<option value="5th_year"> 5th Year </option>
-					<option value="nth_year"> nth Year </option>
-					<option value="masters_1"> Master I </option>
-					<option value="masters_2"> Master II </option>
-					<option value="doctors"> Doctorate </option>
+					<option value="1st_year" <?php if (isset($level) && $level=="1st_year") echo "selected";?>> 1st Year </option>
+					<option value="2nd_year" <?php if (isset($level) && $level=="2nd_year") echo "selected";?>> 2nd Year </option>			   	
+					<option value="3rd_year" <?php if (isset($level) && $level=="3rd_year") echo "selected";?>> 3rd Year </option>
+					<option value="4th_year" <?php if (isset($level) && $level=="4th_year") echo "selected";?>> 4th Year </option>
+					<option value="5th_year" <?php if (isset($level) && $level=="5th_year") echo "selected";?>> 5th Year </option>
+					<option value="nth_year" <?php if (isset($level) && $level=="nth_year") echo "selected";?>> nth Year </option>
+					<option value="masters_1" <?php if (isset($level) && $level=="masters_1") echo "selected";?>> Master I </option>
+					<option value="masters_2" <?php if (isset($level) && $level=="master_2") echo "selected";?>> Master II </option>
+					<option value="doctors" <?php if (isset($level) && $level=="doctors") echo "selected";?>> Doctorate </option>
 				</select>
 			</span>
 			<span id="input" class="col-xs-4">
 				<label for="course">Course: </label>
 				<select name="course" id="course" class="form-control">			
 					<option value=" ">  </option>
-					<option value="Accountancy"> Accountancy </option>
-					<option value="Applied Mathematics"> Applied Mathematics </option>			   	
-					<option value="Biology"> Biology </option>
-					<option value="Business Administration"> Business Administration </option>
-					<option value="Chemical Engineering"> Chemical Engineering </option>
-					<option value="Chemistry"> Chemistry </option>
-					<option value="Communication And Media Studies"> Communication and Media Studies </option>
-					<option value="Community Development"> Community Development </option>
-					<option value="Computer Science"> Computer Science </option>
-					<option value="Economics"> Economics </option>
-					<option value="Fisheries"> Fisheries </option>
-					<option value="Food Technology"> Food Technology </option>
-					<option value="History"> History </option>
-					<option value="Literature"> Literature </option>
-					<option value="Management"> Management </option>
-					<option value="Political Science"> Political Science </option>
-					<option value="Psychology"> Psychology </option>
-					<option value="Public Health"> Public Health </option>
-					<option value="Sociology"> Sociology </option>
-					<option value="Statistics"> Statistics </option>
+					<option value="Accountancy" <?php if (isset($course) && $course=="Accountancy") echo "selected";?>> Accountancy </option>
+					<option value="Applied Mathematics" <?php if (isset($course) && $course=="Applied Mathematics") echo "selected";?>> Applied Mathematics </option>			   	
+					<option value="Biology" <?php if (isset($course) && $course=="Biology") echo "selected";?>> Biology </option>
+					<option value="Business Administration" <?php if (isset($course) && $course=="Business Administration") echo "selected";?>> Business Administration </option>
+					<option value="Chemical Engineering" <?php if (isset($course) && $course=="Chemical Engineering") echo "selected";?>> Chemical Engineering </option>
+					<option value="Chemistry" <?php if (isset($course) && $course=="Chemistry") echo "selected";?>> Chemistry </option>
+					<option value="Communication And Media Studies" <?php if (isset($course) && $course=="Communication And Media Studies") echo "selected";?>> Communication and Media Studies </option>
+					<option value="Community Development" <?php if (isset($course) && $course=="Community Development") echo "selected";?>> Community Development </option>
+					<option value="Computer Science" <?php if (isset($course) && $course=="Computer Science") echo "selected";?>> Computer Science </option>
+					<option value="Economics" <?php if (isset($course) && $course=="Economics") echo "selected";?>> Economics </option>
+					<option value="Fisheries" <?php if (isset($course) && $course=="Fisheries") echo "selected";?>> Fisheries </option>
+					<option value="Food Technology" <?php if (isset($course) && $course=="Food Technology") echo "selected";?>> Food Technology </option>
+					<option value="History" <?php if (isset($course) && $course=="History") echo "selected";?>> History </option>
+					<option value="Literature" <?php if (isset($course) && $course=="Literature") echo "selected";?>> Literature </option>
+					<option value="Management" <?php if (isset($course) && $course=="Management") echo "selected";?>> Management </option>
+					<option value="Political Science" <?php if (isset($course) && $course=="Political Science") echo "selected";?>> Political Science </option>
+					<option value="Psychology" <?php if (isset($course) && $course=="Psychology") echo "selected";?>> Psychology </option>
+					<option value="Public Health" <?php if (isset($course) && $course=="Public Health") echo "selected";?>> Public Health </option>
+					<option value="Sociology" <?php if (isset($course) && $course=="Sociology") echo "selected";?>> Sociology </option>
+					<option value="Statistics" <?php if (isset($course) && $course=="Statistics") echo "selected";?>> Statistics </option>
 				</select>
 			</span>
 			<span id="input" class="col-xs-4">

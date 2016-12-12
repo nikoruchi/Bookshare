@@ -4,15 +4,17 @@
 ?>
 
 <?php
+	$succ = "";
 
-	if(isset($_GET["ID"])){        		
-		$get_id = $_GET["ID"];   	
+	if(isset($_GET["delete_email"])){        		
+		$get_id = $_GET["delete_email"];   	
 	}
             
     $sql = "DELETE FROM account_emails WHERE email_id='$get_id'";
             
     if (mysqli_query($dbconn, $sql)) { 
-        header("Location:edit.php");
+    	$succ = "email_delete";
+        header("Location:edit.php?$succ");
 	} else {
 	?>
 		<p>Error: </p>

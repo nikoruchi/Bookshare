@@ -23,10 +23,9 @@
 			$cart = $row['cart_no'];
 			// $message = mysqli_real_escape_string($dbconn, purchase_msg($buyer_id, $row['book_name']));
 			//$sql = array("$buyer_id", "$recipient", "$message");
-			$query = "UPDATE cart SET status='bought' WHERE cart_no='$cart'";
+			$date=date("Y-m-d H:i:s");
+			$query = "UPDATE cart SET status='bought', date='$date' WHERE cart_no='$cart'";
 			mysqli_query($dbconn,$query);
-			$sql="INSERT INTO messages (message_id, seller_id, buyer_id, book_id, date) VALUES (3,'$seller','$buyer_id','$book','$date')";
-			mysqli_query($dbconn,$sql);
 		}
 	}
 

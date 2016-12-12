@@ -22,8 +22,8 @@
 	<link rel="stylesheet" type="text/css" href="../css/style.css">
 	<link rel="stylesheet" type="text/css" href="../css/shoppinglist.css">
 	<script src="../js/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/normalize.css">
-    <script src="../js/modal.js"></script>
+  <link rel="stylesheet" type="text/css" href="../css/normalize.css">
+  <script src="../js/modal.js"></script>
 </head>
 <body>
 	<div class="wrapper">

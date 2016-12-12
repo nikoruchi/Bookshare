@@ -3,11 +3,6 @@
 	include("connect.php");
 	session_start();
 
-		//$query = "SELECT * FROM account";
-		//$result = mysqli_query($dbconn, $query);
-		//$row = mysqli_fetch_assoc($result);
-		//$account_id = $row['account_id'];
-		
 		$account_id = $_SESSION['buyer_id'];
 		$query1 = "SELECT * FROM account_contacts where account_id='$account_id'"; 
 		$result1 = mysqli_query($dbconn, $query1);
