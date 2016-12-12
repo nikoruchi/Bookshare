@@ -21,14 +21,19 @@
 	
 	if(isset($_POST['submit'])){ 
 		$get_id = $_GET["ID"];
-		$emailz = $_POST['email'];			
+		$emailz = $_POST['email'];
+
+    if($emailz == null){
+        header("Location:edit.php");
+    }
+    else{
 		$insert1 = "UPDATE account_emails SET email='$emailz' WHERE email_id='$get_id'";
 		$insertresult1 = mysqli_query($dbconn, $insert1);			
 		if($insertresult1){
       $success = "email";
 			header("Location:edit.php?succ=$success");
 		}
-
+  }
 	}
 	if(isset($_POST['cancel'])){
 		header("Location:edit.php");
@@ -121,7 +126,7 @@
             	<form action="updateemail.php?ID=<?php echo $get_id;?>" method="POST">
             		<content>
                 	<label id="number">Email:</label> 
-                	<input  class="form-control-set" type="text" name="email" value="<?php echo $emailold; ?>">
+                	<input  class="form-control-set" type="email" name="email" value="<?php echo $emailold; ?>">
                 	</content>
                 	<content id="edit-btn-container">
                         <input type="submit" name="submit" value="Update" class="btn btn-default">

@@ -54,34 +54,6 @@
 			$category=$Category;
 		}
 
-		// $pattern = preg_replace('/[^0-9]/',' ', $Edition);
-		
-		//$pattern = preg_match('/[^0-9]/', $Edition);
-		
-		// if ($pattern==false){
-		// 	echo "**Edition should contain number only.";
-		// }
-
-		// $checker = is_numeric($Edition);
-
-		// echo $checker;
-
-		// if($checker==true){
-		// 	$prompt = "lol";
-		// }
-
-		// $checker=true;
-
-		// if(!preg_match('/^[0-9]+(\\.[0-9]+)?$/', $Edition)){
-		// 	$prompt = "ABCD";
-		// }
-
-        // if (!($pattern){ }
-       	// else{$prompt = "**Wrong Edition input.";}
-		
-		// if(!(preg_match('/[^0-9]/', $Edition))){
-		// 	$prompt="Puli na to";
-		// }
 
 	  	if ($prompt=='') {
 			$info_update = "UPDATE book_info BI, books B SET B.book_price= '$price', B.book_name= '$title', BI.book_author= '$authors', B.book_desc= '$description', BI.book_details= '$details', B.book_edition='$edition', BI.book_subject='$category', BI.book_quality='$quality' where B.book_id=BI.book_id and BI.book_id=$book_id";
@@ -301,7 +273,7 @@
 			</content>
 			<content class=" extra_details col-xs-2">
 				<label id="info_label" for='quality'>Quality: </label>
-				<input type="number" name="quality" min="1" class="form-control" value="<?php echo $Quality ?>" placeholder="0-100%">
+				<input type="number" name="quality" min="1" class="form-control" value="<?php echo $Quality ?>" placeholder="1-100%">
 			</content>
 			<content class=" extra_details col-xs-4">
 				<label  id="info_label" for='quality'>Pages: </label>
@@ -341,7 +313,7 @@
             <img id="book_pic" src="<?php echo $book_image;?>" width="200" height="275" alt="user photo" >
           </div>
           <label class="fileUpload btn btn-success">    
-            <span>Upload</span> 
+            <span>Choose File...</span> 
             <input type="file" name="pic-upload" id="pic-upload" class="upload" />
           </label>
         <div class="modal-footer">

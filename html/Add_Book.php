@@ -236,11 +236,11 @@
 			</content>
 			<content class="col-xs-2">
 				<label for='edition' id="info_label">Edition: </label>
-				<input type="number" min='1' name="edition" class="form-control" placeholder="1st, 2nd, etc.">
+				<input type="number" min=1 name="edition" class="form-control" placeholder="1st, 2nd, etc.">
 			</content>
 			<content class=" extra_details col-xs-2">
 				<label id="info_label" for='quality'>Quality: </label>
-				<input type="number" min="1" max="100" name="quality" class="form-control" placeholder="0-100%" value="<?= $prev_quality?>">
+				<input type="number" min="1" max="100" name="quality" class="form-control" placeholder="1-100%" value="<?= $prev_quality?>">
 			</content>
 			<content class=" extra_details col-xs-4">
 				<label  id="info_label" for='pages'>Pages: </label>

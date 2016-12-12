@@ -338,7 +338,7 @@
         </div>
         <div class="modal-body">
              <span class="box">
-                <div> 
+                <div id="number_modal"> 
                    <label id="modal_label">Contact Number:</label>
                    <input class="form-control-set" type="number" name="contact_number">
                 </div>
@@ -369,7 +369,7 @@
    <script type="text/javascript">
       function delete_id(id)
       {
-        if(confirm('Sure To Remove This Contact?'))
+        if(confirm('Sure To Remove Contact Number?'))
         {
           window.location.href='deletecontact.php?delete_id='+id;
         }

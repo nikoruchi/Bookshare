@@ -194,7 +194,7 @@
          <a class="bookshelf_book_container" href="Public_book_info.php?id=<?php echo $row["book_id"];?>" > 
         <content class="bookshelf_book">
           <img height="225" width="150" class="" alt="<?=$row["book_name"];?>" title="<?=$row["book_name"];?>" src="<?php echo $row['book_imagepath']; ?>">
-        <label>Php<?=$row["book_price"];?><br><?=$row["book_name"];?></label>
+        <label>Php<?=$row["book_price"];?></label>
         </content>
       </a>
    <?php   }

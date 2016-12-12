@@ -19,14 +19,19 @@
 	
 		if(isset($_POST['update'])){ 
 			$get_id = $_GET["ID"];
-			$contactz = $_POST['contactnum'];			
-			$insert1 = "UPDATE account_contacts SET contact_number='$contactz' WHERE contact_id='$get_id'";
-			$insertresult1 = mysqli_query($dbconn, $insert1);			
-			if($insertresult1){
-        $success = "contact";
-				header("Location:edit.php?succ=$success");
-			}
+			$contactz = $_POST['contactnum'];
 
+      if($contactz == null){
+        header("Location:edit.php");
+      }
+      else{
+			 $insert1 = "UPDATE account_contacts SET contact_number='$contactz' WHERE contact_id='$get_id'";
+			 $insertresult1 = mysqli_query($dbconn, $insert1);			
+			 if($insertresult1){
+          $success = "contact";
+				  header("Location:edit.php?succ=$success");
+			 }
+      }
 		}
 		if(isset($_POST['cancel'])){
 			header("Location:edit.php");
