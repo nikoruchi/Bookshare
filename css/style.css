@@ -39,7 +39,7 @@
 }
 .bookshelf_book_container{
 	width: 149px;
-	height: 258px;
+	height: 268px;
 	display: inline-block;
 	padding: 0;
   margin-top: 10px;
@@ -272,7 +272,7 @@ input[type=text],input[type=password],input[type=tel],input[type=email],textarea
 /*UPLOAD MODAL*/
 .fileUpload {
   overflow: hidden;
-  margin-left: 232px;
+  margin-left: 212px;
   margin-top: -3px;
 }
 .fileUpload input[type=file] {

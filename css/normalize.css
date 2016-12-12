@@ -349,6 +349,9 @@ fieldset[disabled] .form-control-srch {
 .modal-body span{
   margin-left: 5px;
 }
+#number_modal input[type=number]{
+  margin-left: 189px;
+}
 .modal-footer {
   padding: 15px;
   text-align: right;

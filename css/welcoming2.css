@@ -14,7 +14,7 @@ body{
 .form_container{
 	background-color: rgba(255,255,255, 0.28);
 	width: 600px;
-	height: 655px;
+	height: auto;
 	margin: 55px 390px;
 	/*position: fixed;	*/
 }
@@ -66,6 +66,7 @@ h1{
 	display: block;
 	text-align: center;
 	text-decoration: none;
+  padding-bottom: 5px;
 }
 #redirect_placement{
 	padding-top: 10px;
