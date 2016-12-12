@@ -59,7 +59,7 @@
 	width: 939px;
 	height: auto;
 	margin: 20px 22px;
-	font-size: 20px;
+	font-size: 15px;
   font-family: 'Microsoft Yi Baiti';
 }
 .add_button_container{
@@ -124,7 +124,7 @@
 } 
 .book_info2{
 	margin-left: 220px;
-	margin-top: -530px;
+	margin-top: -560px;
 	width: 420px;
 }
 .book_info2e{
@@ -226,11 +226,13 @@ input[type=text],input[type=password],input[type=tel],input[type=email],textarea
 	font-size:50px;
 }
 #prev_next{
-	margin-left: 850px;
+  position: relative;
+  float: right;
+	padding-right: 19px;
   font-family: 'Microsoft Yi Baiti';
 }
 .add_cart{
-	margin-top: 155px;
+	margin-top: 205px;
 	margin-left: 156px;
 	width: 122px;
 }

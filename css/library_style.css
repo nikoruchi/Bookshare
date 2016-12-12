@@ -52,7 +52,10 @@ td{
 	background-color: #DEDCDC;
 }
 #lib_prev_next{
-	margin-left: 510px;
+	position: relative;
+  	float: right;
+  	margin-right: -20px;
+	margin-right: -320px;
 	font-family: 'Microsoft Yi Baiti';
 }
 #tag_results{

@@ -40,6 +40,8 @@
 	font-family: 'Raleway Medium';
 }
 .shelf_prevnext{
-	margin-left: 760px;
+	padding-right: 100px;
+    float: right;
+    position: relative;
   	font-family: 'Microsoft Yi Baiti';
 }

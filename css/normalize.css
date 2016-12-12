@@ -24,6 +24,7 @@ body a{
   padding-bottom: 5px;
   font-family: 'Microsoft Yi Baiti';
   color: red;
+  /*padding-left: 90px;*/
 }
 
 /*footer*/
@@ -91,6 +92,7 @@ nav div{
 	width: 170px;
 	background-color: rgba(0,0,0,0.2);
   cursor: pointer;
+  transition: 0.3s background-color;
 }
 .nav_lib label{
 	margin: -49px 63px;
